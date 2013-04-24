@@ -3,6 +3,7 @@ import psycopg2
 import psycopg2.pool
 import jinja2
 import os
+from lib.repository import Repository
 
 expose = cherrypy.expose
 
@@ -36,8 +37,8 @@ class CherryPyCallRenderWrapper (object):
 render = CherryPyCallRenderWrapper
 
 class RootController:
-    def __init__ (self, db, settings):
-        self.db = db
+    def __init__ (self, repo, settings):
+        self.repository = repo
 
     @expose
     @render (template='index.jtml')
@@ -45,6 +46,12 @@ class RootController:
         if q is None:
             return {}
         return {}
+
+
+    @expose
+    def save_link (self, url, notes):
+        self.repository.save_link (url, notes)
+
 
 
 class Settings:
@@ -69,9 +76,9 @@ def main ():
 
     cherrypy.config.update({'server.socket_host': args.bind, 'server.socket_port': int(args.port)})
 
-    db = psycopg2.pool.ThreadedConnectionPool(0, 10, settings.db_connection)
+    repository = Repository (settings.db_connection)
 
-    cherrypy.tree.mount(RootController(db, settings), '/', config=CHERRYPY_CONF)
+    cherrypy.tree.mount(RootController(repository, settings), '/', config=CHERRYPY_CONF)
 
     cherrypy.engine.start()
     cherrypy.engine.block()

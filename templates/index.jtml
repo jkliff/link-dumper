@@ -95,14 +95,14 @@
 
         <div class="span6">
             <h3>New link</h3>
-            <form>
+            <form id="formLinkEdit" action="save_link" method="POST">
                 <fieldset>
                     <label>URL</label>
-                    <input type="text" class="input-xxlarge" placeholder="url">
+                    <input name="url" type="text" class="input-xxlarge" placeholder="url">
                     <label>Notes</label>
-                    <textarea rows="10" class="input-xxlarge" placeholder="description"></textarea>
+                    <textarea name="notes" rows="10" class="input-xxlarge" placeholder="description"></textarea>
                 </fieldset>
-                <button type="submit" class="btn">Save</button>
+                <button id="formLinkEditSubmit" type="button" class="btn">Save</button>
             </form>
         </div>
 
@@ -125,6 +125,8 @@
     <script src="static/js/bootstrap-collapse.js"></script>
     <script src="static/js/bootstrap-carousel.js"></script>
     <script src="static/js/bootstrap-typeahead.js"></script>
+    <script src="static/js/linkdump.js"></script>
+
 
   </body>
 </html>

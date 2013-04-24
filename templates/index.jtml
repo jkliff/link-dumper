@@ -56,8 +56,8 @@
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li class="active"><a href="#">Home</a></li>
+              <li><a href="/">New link</a></li>
               <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
             </ul>
             <form class="navbar-form pull-right">
               <input class="span2" type="text" placeholder="Search">
@@ -77,14 +77,12 @@
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
-              <li class="nav-header">Last searched</li>
+              <li class="nav-header">Tags</li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li class="nav-header">Most viewed</li>
+              <li class="nav-header">Actions</li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
@@ -94,7 +92,7 @@
 
 
         <div class="span6">
-            <h3>New link</h3>
+            <h3>Edit link</h3>
             <form id="formLinkEdit" action="save_link" method="POST">
                 <fieldset>
                     <label>URL</label>
@@ -104,6 +102,10 @@
                 </fieldset>
                 <button id="formLinkEditSubmit" type="button" class="btn">Save</button>
             </form>
+        </div>
+
+        <div class="span3">
+            Link info
         </div>
 
 

@@ -2,6 +2,7 @@ import cherrypy
 import psycopg2
 import psycopg2.pool
 import jinja2
+import json
 import os
 from lib.repository import Repository
 
@@ -34,7 +35,14 @@ class CherryPyCallRenderWrapper (object):
             return self.template.render ()
         return w
 
+
+def cherrypy_json_output_wrapper (fn):
+    def w (*args):
+        return json.dumps (fn (*args))
+    return w
+
 render = CherryPyCallRenderWrapper
+output_json = cherrypy_json_output_wrapper
 
 class RootController:
     def __init__ (self, repo, settings):
@@ -47,12 +55,18 @@ class RootController:
             return {}
         return {}
 
-
     @expose
     def save_link (self, url, notes):
         self.repository.save_link (url, notes)
 
-
+    @expose
+    @output_json
+    def list_meta (self):
+        r = {    'actions': self.repository.list_actions (),
+                    'tags': self.repository.list_tags ()
+            }
+        print r
+        return r
 
 class Settings:
     db_connection = None

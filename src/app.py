@@ -18,19 +18,17 @@ class CherryPyCallRenderWrapper (object):
     def __init__ (self, template):
         print 'Initializing wrapper with template %s' % template
 
-        self.template_path = os.path.join (TEMPLATE_PATH, template)
-        if not os.path.exists (self.template_path):
-            raise Exception ('Template [%s] not found at [%s].' % (self.template_path, os.path.abspath (self.template_path)))
+        env = jinja2.environment.Environment()
+        env.loader = jinja2.FileSystemLoader(TEMPLATE_PATH)
+        self.template = env.get_template(template)
 
-        with (open (self.template_path)) as f:
-            self.template = jinja2.Template (f.read ())
 
     def __call__ (self, fn):
-        def w (*args):
-
-            d = fn (*args)
+        def w (*args, **kw):
+            print 'wrapper...', args, kw
+            d = fn (*args, **kw)
             print 'data', d
-            return self.template.render ()
+            return self.template.render (d)
         return w
 
 
@@ -49,8 +47,13 @@ class RootController:
     @expose
     @render (template='index.jtml')
     def index (self, q=None):
-        if q is None:
-            return {}
+        r = {'links': self.repository.list_last_links (10) or []
+            }
+        return r
+
+    @expose
+    @render (template='edit_link.jtml')
+    def edit_link (self, q=None):
         return {}
 
     @expose
@@ -77,6 +80,26 @@ class RootController:
         r = {   'actions': self.repository.list_actions (),
                 'tags': self.repository.list_tags ()
             }
+        return r
+
+    @expose
+    @render (template='index.jtml')
+    def search (self, q=None):
+
+        print q
+        params = [x.strip() for x in q.split (' ')]
+        tags = []
+        actions = []
+        terms = []
+        for p in params:
+            if p.startswith ('#'):
+                tags.append (p)
+            elif p.startswith ('!'):
+                actions.append (p)
+            else:
+                terms.append (p)
+
+        r = { 'links': self.repository.search (terms, tags, actions) or []}
         return r
 
 class Settings:

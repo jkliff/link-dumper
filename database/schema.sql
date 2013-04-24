@@ -2,7 +2,9 @@ create schema linkdump_data;
 create table linkdump_data.link (
     l_id serial primary key,
     l_url text,
-    l_notes text
+    l_notes text,
+    l_created timestamp not null default now (),
+    l_last_modified timestamp not null default now ()
 );
 
 create table linkdump_data.tag (

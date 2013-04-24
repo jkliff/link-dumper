@@ -93,3 +93,21 @@ select l_url, ARRAY (select t_name
                         left join linkdump_data.tag on lt_tag_id = t_id
                     where lt_link_id = l_id)
 from  linkdump_data.link """
+
+
+    def list_last_links (self, limit):
+        q = """select l_id, l_url, ARRAY(select t_name from linkdump_data.link_tag join linkdump_data.tag on t_id = lt_tag_id where lt_link_id = l_id)
+from linkdump_data.link
+order by l_last_modified
+limit %s"""
+
+        with (self.db.getconn ()) as conn:
+            with (conn.cursor ()) as c:
+                c.execute (q, (limit,))
+                return c.fetchall()
+
+    def search (self, terms, tags, actions):
+        print terms, tags, actions
+
+
+

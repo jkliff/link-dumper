@@ -1,6 +1,4 @@
 import cherrypy
-import psycopg2
-import psycopg2.pool
 import jinja2
 import json
 import os
@@ -57,15 +55,28 @@ class RootController:
 
     @expose
     def save_link (self, url, notes):
-        self.repository.save_link (url, notes)
+
+        tags = []
+        actions = []
+        for s in [x.strip() for x in ' '.join (notes.split ('\n')).split (' ')]:
+            if s.startswith ('#'):
+                tags.append (s [1:])
+            elif s.startswith ('!'):
+                actions.append (s [1:])
+
+        if len (tags) == 0:
+            tags = None
+        if len (actions) == 0:
+            actions = None
+
+        self.repository.save_link (url, notes, tags, actions)
 
     @expose
     @output_json
     def list_meta (self):
-        r = {    'actions': self.repository.list_actions (),
-                    'tags': self.repository.list_tags ()
+        r = {   'actions': self.repository.list_actions (),
+                'tags': self.repository.list_tags ()
             }
-        print r
         return r
 
 class Settings:

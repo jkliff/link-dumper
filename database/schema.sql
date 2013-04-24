@@ -7,12 +7,12 @@ create table linkdump_data.link (
 
 create table linkdump_data.tag (
     t_id serial primary key,
-    t_name text
+    t_name text unique
 );
 
 create table linkdump_data.action (
     a_id serial primary key,
-    a_name text
+    a_name text unique
 );
 
 create table linkdump_data.link_tag (

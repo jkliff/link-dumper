@@ -54,14 +54,14 @@
           </button>
           <a class="brand" href="#">link_dump</a>
           <div class="nav-collapse collapse">
-            <p class="navbar-text pull-right">
-              Logged in as <a href="#" class="navbar-link">Username</a>
-            </p>
             <ul class="nav">
               <li class="active"><a href="#">Home</a></li>
               <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
+            <form class="navbar-form pull-right">
+              <input class="span2" type="text" placeholder="Search">
+            </form>
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -72,19 +72,19 @@
         <div class="span3">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-              <li class="nav-header">Sidebar</li>
+              <li class="nav-header">Last inserted</li>
               <li class="active"><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
-              <li class="nav-header">Sidebar</li>
+              <li class="nav-header">Last searched</li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
-              <li class="nav-header">Sidebar</li>
+              <li class="nav-header">Most viewed</li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>
@@ -93,8 +93,17 @@
         </div><!--/span-->
 
 
-        <div class="span9">
-        fubar?
+        <div class="span6">
+            <h3>New link</h3>
+            <form>
+                <fieldset>
+                    <label>URL</label>
+                    <input type="text" class="input-xxlarge" placeholder="url">
+                    <label>Notes</label>
+                    <textarea rows="10" class="input-xxlarge" placeholder="description"></textarea>
+                </fieldset>
+                <button type="submit" class="btn">Save</button>
+            </form>
         </div>
 
 

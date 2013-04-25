@@ -29,7 +29,7 @@ class Repository(object):
 
     def add_tag (self, link_id, tag):
         print link_id, tag
-        with (self.db.getconn ()) as conn:
+        with (self.getconn ()) as conn:
             with (conn.cursor ()) as c:
                 c.execute ('insert into linkdump_data.link_tag (lt_link_id, lt_tag_id) values (%s, %s)', (link_id[0], tag [0]))
 
@@ -39,7 +39,7 @@ class Repository(object):
         print tags, actions, url, notes
 
         tag_rel = []
-        with (self.db.getconn ()) as conn:
+        with (self.getconn ()) as conn:
             with (conn.cursor ()) as c:
                 c.execute ('insert into linkdump_data.link (l_url, l_notes) values (%s, %s) returning l_id', (url, notes))
 
@@ -76,12 +76,12 @@ where t_id is not null
 
 
     def list_tags (self):
-        with (self.db.getconn ()) as conn:
+        with (self.getconn ()) as conn:
             with (conn.cursor ()) as c:
                 c.execute ('select * from linkdump_data.tag order by t_name;')
 
     def list_actions (self):
-         with (self.db.getconn ()) as conn:
+         with (self.getconn ()) as conn:
             with (conn.cursor ()) as c:
                 c.execute ('select * from linkdump_data.action order by a_name;')
 
@@ -101,7 +101,7 @@ from linkdump_data.link
 order by l_last_modified
 limit %s"""
 
-        with (self.db.getconn ()) as conn:
+        with (self.getconn ()) as conn:
             with (conn.cursor ()) as c:
                 c.execute (q, (limit,))
                 return c.fetchall()
@@ -130,7 +130,7 @@ from linkdump_data.link
         actions = remove_selector (actions)
         terms = to_like_expression (terms)
 
-        with (self.db.getconn ()) as conn:
+        with (self.getconn ()) as conn:
             with (conn.cursor ()) as c:
                 print c.mogrify (q, (tags, terms, terms))
                 c.execute (q, (tags, terms, terms)) #actions))

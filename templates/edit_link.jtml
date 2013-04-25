@@ -24,6 +24,7 @@
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">Link info</li>
+              <li><a href="" target="_blank">Visit</a></li>
               <li>Created</li>
               <li>Last modified</li>
 

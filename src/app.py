@@ -53,7 +53,8 @@ class RootController:
 
     @expose
     @render (template='edit_link.jtml')
-    def edit_link (self, q=None):
+    def edit_link (self, l_id=None):
+        print l_id
         return {}
 
     @expose

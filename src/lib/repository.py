@@ -107,7 +107,37 @@ limit %s"""
                 return c.fetchall()
 
     def search (self, terms, tags, actions):
-        print terms, tags, actions
 
+        print terms, tags, actions
+        q = """with links as (
+select distinct l_id
+from linkdump_data.link
+    join linkdump_data.link_tag on lt_link_id = l_id
+    join linkdump_data.tag on t_id = lt_tag_id
+where t_name = ANY(%s)
+    or l_notes like ANY (%s)
+    or l_url ilike ANY (%s)
+)
+select link.l_id, l_url, ARRAY (select t_name
+                    from linkdump_data.link_tag
+                        left join linkdump_data.tag on lt_tag_id = t_id
+                    where lt_link_id = link.l_id)
+from linkdump_data.link
+    join links on links.l_id = link.l_id
+"""
+        # remove # from tag name
+        tags = remove_selector (tags)
+        actions = remove_selector (actions)
+        terms = to_like_expression (terms)
+
+        with (self.db.getconn ()) as conn:
+            with (conn.cursor ()) as c:
+                print c.mogrify (q, (tags, terms, terms))
+                c.execute (q, (tags, terms, terms)) #actions))
+                return c.fetchall()
+
+
+to_like_expression = lambda l: ['%%%s%%' % x for x in l]
+remove_selector = lambda l: [x [1:] for x in l]
 
 

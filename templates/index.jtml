@@ -4,11 +4,15 @@
 
        <div class="span12">
             <table class="table table-hover table-condensed">
-                <thead></thead>
+                <thead>
+                    <th>Url</th>
+                    <th>Tags</th>
+                </thead>
                 <tbody>
                 {% for l in links %}
                 <tr>
-                    <td>{{ l }} </td>
+                    <td><a href="{{l[1]}}">{{ l[1] }}</a> <a class="pull-right" href="/edit_link?l_id={{l[0]}}">Edit</a></td>
+                    <td>{{l [2]}}</td>
                 </tr>
                 {% endfor %}
                 </tbody>

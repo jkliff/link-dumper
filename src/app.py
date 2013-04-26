@@ -16,6 +16,8 @@ CHERRYPY_CONF = {
 
 TEMPLATE_PATH = 'templates'
 
+BASE_URL = ''
+
 class CherryPyCallRenderWrapper (object):
     def __init__ (self, template):
         print 'Initializing wrapper with template %s' % template
@@ -29,7 +31,9 @@ class CherryPyCallRenderWrapper (object):
         def w (*args, **kw):
             print 'wrapper...', args, kw
             d = fn (*args, **kw)
+            d ['base'] = BASE_URL
             print 'data', d
+
             return self.template.render (d)
         return w
 
@@ -158,6 +162,7 @@ def read_config (path):
     settings.db_connection = d ['db_connection']
     settings.bind = d ['bind']
     settings.port = d ['port']
+    settings.base_url = d ['base_url']
 
     if None in (settings.bind, settings.port, settings.db_connection):
         raise Exception ("Configuration incomplete. Can't start: [%s]" % settings)
@@ -165,6 +170,7 @@ def read_config (path):
     return settings
 
 def main ():
+    global BASE_URL
     from argparse import ArgumentParser
 
     parser = ArgumentParser(description='Order Cockpit')
@@ -172,6 +178,8 @@ def main ():
 
     args = parser.parse_args()
     settings = read_config (args.config)
+
+    BASE_URL = settings.base_url
 
     cherrypy.config.update({'server.socket_host': settings.bind, 'server.socket_port': settings.port})
 

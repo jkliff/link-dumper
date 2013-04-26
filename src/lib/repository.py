@@ -1,6 +1,9 @@
 import psycopg2
 import psycopg2.pool
 
+if '2.5' > psycopg2.__version__:
+    raise Exception ('SEVERE: psycopg version 2.5 or greater is required')
+
 
 class Repository(object):
     def __init__ (self, db_conn_str):

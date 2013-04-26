@@ -137,7 +137,7 @@ class RootController:
                 idx = self.repository.save_link (i, 'auto imported (bulk)')
                 ids.append (idx)
 
-            raise cherrypy.HTTPRedirect ('/')
+            raise cherrypy.HTTPRedirect (BASE_URL)
 
         return {'urls': urls, 'non_urls': non_urls}
 

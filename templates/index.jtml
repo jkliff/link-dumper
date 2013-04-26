@@ -3,18 +3,20 @@
 {% block content %}
 
        <div class="span12">
+
+
+            <form id="formMainSearch">
+              <input class="span6" name="q" type="text" placeholder="Search">
+            </form>
+
+
             <table class="table table-hover table-condensed">
                 <thead>
                     <th>Url</th>
                     <th>Tags</th>
                 </thead>
-                <tbody>
-                {% for l in links %}
-                <tr>
-                    <td><a href="{{l[1]}}">{{ l[1] }}</a> <a class="pull-right" href="/edit_link?l_id={{l[0]}}">Edit</a></td>
-                    <td>{{l [2]}}</td>
-                </tr>
-                {% endfor %}
+                <tbody id="resultTableBody">
+                    <!-- filled by javascript -->
                 </tbody>
             </table>
        </div><!--/span-->

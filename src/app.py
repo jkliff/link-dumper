@@ -53,9 +53,7 @@ class RootController:
     @expose
     @render (template='index.jtml')
     def index (self, q=None):
-        r = {'links': self.repository.list_last_links (10) or []
-            }
-        return r
+        return {}
 
     @expose
     @render (template='edit_link.jtml')
@@ -90,7 +88,8 @@ class RootController:
         return r
 
     @expose
-    @render (template='index.jtml')
+    #@render (template='index.jtml')
+    @output_json
     def search (self, q=None):
 
         params = [x.strip() for x in q.split (' ')]

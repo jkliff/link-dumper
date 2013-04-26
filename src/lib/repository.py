@@ -1,7 +1,6 @@
 import psycopg2
 import psycopg2.pool
 
-print psycopg2.__version__
 if '2.5' > psycopg2.__version__:
     raise Exception ('SEVERE: psycopg version 2.5 or greater is required')
 

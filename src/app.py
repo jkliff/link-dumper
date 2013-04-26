@@ -3,6 +3,7 @@ import jinja2
 import json
 import os
 from lib.repository import Repository
+import re
 
 expose = cherrypy.expose
 
@@ -33,8 +34,8 @@ class CherryPyCallRenderWrapper (object):
 
 
 def cherrypy_json_output_wrapper (fn):
-    def w (*args):
-        return json.dumps (fn (*args))
+    def w (*args, **kw):
+        return json.dumps (fn (*args, **kw))
     return w
 
 render = CherryPyCallRenderWrapper
@@ -87,7 +88,6 @@ class RootController:
     @render (template='index.jtml')
     def search (self, q=None):
 
-        print q
         params = [x.strip() for x in q.split (' ')]
         tags = []
         actions = []
@@ -102,6 +102,40 @@ class RootController:
 
         r = { 'links': self.repository.search (terms, tags, actions) or []}
         return r
+
+    @expose
+    @render (template='bulk_import.jtml')
+    def bulk_import (self):
+        return {}
+
+    @expose
+    @output_json
+    def perform_bulk_import (self, mode=None, q=None):
+
+        if q is None:
+            return {}
+
+        s = [x.strip () for x in re.split (r'\n| ', q)]
+
+        r = re.compile (r'(http.*)')
+        urls = []
+        non_urls = []
+ 
+        for i in s:
+            if r.match (i) is None:
+                non_urls.append (i)
+            else:
+                urls.append (i)
+        if mode == 'perform':
+            ids = []
+            for i in urls:
+                idx = self.repository.save_link (i, 'auto imported (bulk)')
+                ids.append (idx)
+
+            raise cherrypy.HTTPRedirect ('/')
+
+        return {'urls': urls, 'non_urls': non_urls}
+
 
 class Settings:
     db_connection = None

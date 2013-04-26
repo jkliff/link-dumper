@@ -1,0 +1,37 @@
+{% extends "base.jtml" %}
+{% block link_class_active_bulk_import %}class="active"{% endblock %}
+
+{% block content %}
+
+<div class="span12">
+
+    <h2>Bulk link import</h2>
+
+
+    <div class="span6">
+    <form id="formBulkImport">
+        <input type="hidden" name="mode" value="" />
+        <fieldset>
+            <label>Raw data</label>
+            <textarea rows="10" name="q" class="input-xxlarge" placeholder="urls"></textarea>
+        </fieldset>
+        <button id="bulkImportSubmit" type="button" class="btn">Submit</button>
+    </form>
+    </div>
+
+
+    <div class="span4">
+        <form id="formConfirmBulkImport" action="perform_bulk_import" method="POST">
+            <input type="hidden" name="mode" value="perform" />
+            <input id="formConfirmResolvedUrls" type="hidden" name="q" value="" />
+            <fieldset>
+                <label>Identified URLs:</label>
+                <ol id="resolvedUrls"></ol>
+            </fieldset>
+            <input type="submit" class="btn" disabled value="Confirm">
+        </form>
+        <ul id="non_urls"></ul>
+    </div>
+</div>
+
+{% endblock %}

@@ -36,16 +36,14 @@ class Repository(object):
 
     def save_link (self, url, notes, tags=None, actions=None):
 
-        print tags, actions, url, notes
-
         tag_rel = []
         with (self.getconn ()) as conn:
             with (conn.cursor ()) as c:
                 c.execute ('insert into linkdump_data.link (l_url, l_notes) values (%s, %s) returning l_id', (url, notes))
 
-                link_id = c.fetchone ()
+                link_id = c.fetchone () [0]
+                conn.commit ()
                 if tags is not None:
-
                     c.execute ("""
 with all_tags as (
     select t_id, t.name as name
@@ -71,19 +69,23 @@ where t_id is not null
 
 """, (tags,))
                     tag_rel = c.fetchall ()
-        for t in tag_rel:
-            self.add_tag (link_id, t)
+                    for t in tag_rel:
+                        self.add_tag (link_id, t)
 
+
+        return link_id
 
     def list_tags (self):
         with (self.getconn ()) as conn:
             with (conn.cursor ()) as c:
                 c.execute ('select * from linkdump_data.tag order by t_name;')
+                return c.fetchall()
 
     def list_actions (self):
          with (self.getconn ()) as conn:
             with (conn.cursor ()) as c:
                 c.execute ('select * from linkdump_data.action order by a_name;')
+                return c.fetchall ()
 
 
     def load_link (self, l_id):
@@ -92,11 +94,18 @@ select l_url, ARRAY (select t_name
                     from linkdump_data.link_tag
                         left join linkdump_data.tag on lt_tag_id = t_id
                     where lt_link_id = l_id)
-from  linkdump_data.link """
-
+from linkdump_data.link
+where l_id = %s"""
+        with (self.getconn ()) as conn:
+            with (conn.cursor ()) as c:
+                c.execute (q, (l_id, ))
+                return c.fetchone ()
 
     def list_last_links (self, limit):
-        q = """select l_id, l_url, ARRAY(select t_name from linkdump_data.link_tag join linkdump_data.tag on t_id = lt_tag_id where lt_link_id = l_id)
+        q = """select l_id, l_url, ARRAY(select t_name 
+                    from linkdump_data.link_tag 
+                        join linkdump_data.tag on t_id = lt_tag_id 
+                    where lt_link_id = l_id)
 from linkdump_data.link
 order by l_last_modified
 limit %s"""
@@ -108,12 +117,11 @@ limit %s"""
 
     def search (self, terms, tags, actions):
 
-        print terms, tags, actions
         q = """with links as (
 select distinct l_id
 from linkdump_data.link
-    join linkdump_data.link_tag on lt_link_id = l_id
-    join linkdump_data.tag on t_id = lt_tag_id
+    left join linkdump_data.link_tag on lt_link_id = l_id
+    left join linkdump_data.tag on t_id = lt_tag_id
 where t_name = ANY(%s)
     or l_notes like ANY (%s)
     or l_url ilike ANY (%s)
@@ -132,7 +140,6 @@ from linkdump_data.link
 
         with (self.getconn ()) as conn:
             with (conn.cursor ()) as c:
-                print c.mogrify (q, (tags, terms, terms))
                 c.execute (q, (tags, terms, terms)) #actions))
                 return c.fetchall()
 

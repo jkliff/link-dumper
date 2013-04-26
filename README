@@ -1,0 +1,3 @@
+depends on psycopg2 2.5
+cherrypy
+jinja2

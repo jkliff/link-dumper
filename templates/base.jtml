@@ -57,6 +57,8 @@
             <ul class="nav">
               <li {% block link_class_active_home %}{% endblock%}><a href="/">Home</a></li>
               <li {% block link_class_active_edit_link %}{% endblock %}><a href="/edit_link">Link edit</a></li>
+              <li {% block link_class_active_bulk_import %}{% endblock %}><a href="/bulk_import">Bulk import</a></li>
+
             </ul>
             <form class="navbar-form pull-right" action="/search" method="GET">
               <input class="span6" name="q" type="text" placeholder="Search">

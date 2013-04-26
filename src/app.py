@@ -158,7 +158,7 @@ def read_config (path):
     settings.db_connection = d ['db_connection']
     settings.bind = d ['bind']
     settings.port = d ['port']
-    print settings
+
     if None in (settings.bind, settings.port, settings.db_connection):
         raise Exception ("Configuration incomplete. Can't start: [%s]" % settings)
 

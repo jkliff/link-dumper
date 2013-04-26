@@ -1,1 +1,4 @@
-python src/app.py -c foo -p 7777 -b 0.0.0.0
+#!/bin/bash
+
+CONF=$1
+python src/app.py -c $CONF

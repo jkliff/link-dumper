@@ -4,6 +4,7 @@ import json
 import os
 from lib.repository import Repository
 import re
+import yaml
 
 expose = cherrypy.expose
 
@@ -138,11 +139,28 @@ class RootController:
 
 
 class Settings:
-    db_connection = None
+
+    def __init__ (self):
+
+        self.db_connection = None
+        self.bind = None
+        self.port = None
+
+    def __repr__ (self):
+        return str (self.__dict__)
 
 def read_config (path):
     settings = Settings ()
-    settings.db_connection = 'dbname=linkdump_dev user=linkdump_dev host=pg_local_dev password=linkdump_dev'
+    d = {}
+    with (open (path)) as f:
+        d = yaml.load (f)
+
+    settings.db_connection = d ['db_connection']
+    settings.bind = d ['bind']
+    settings.port = d ['port']
+    print settings
+    if None in (settings.bind, settings.port, settings.db_connection):
+        raise Exception ("Configuration incomplete. Can't start: [%s]" % settings)
 
     return settings
 
@@ -151,13 +169,11 @@ def main ():
 
     parser = ArgumentParser(description='Order Cockpit')
     parser.add_argument('-c', '--config', help='Path to config file.', dest='config', required=True)
-    parser.add_argument('-p', '--port', help='Port number to listen on', required=True)
-    parser.add_argument('-b', '--bind', default='0.0.0.0', help='Bind IP', required=True)
 
     args = parser.parse_args()
     settings = read_config (args.config)
 
-    cherrypy.config.update({'server.socket_host': args.bind, 'server.socket_port': int(args.port)})
+    cherrypy.config.update({'server.socket_host': settings.bind, 'server.socket_port': settings.port})
 
     repository = Repository (settings.db_connection)
 

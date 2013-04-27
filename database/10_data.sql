@@ -27,3 +27,5 @@ create table linkdump_data.link_action (
     la_link_id integer references linkdump_data.link (l_id),
     la_action_id integer references linkdump_data.action (a_id)
 );
+
+

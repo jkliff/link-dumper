@@ -33,10 +33,12 @@ value="{{link [1]}}"
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
               <li class="nav-header">Link info</li>
-              <li><a href="" target="_blank">Visit</a></li>
-              <li>Created</li>
-              <li>Last modified</li>
+            {% if link %}
 
+              <li><a href="" target="_blank">Visit</a></li>
+              <li>Created {{ link [5] }}</li>
+              <li>Last modified {{ link [6]}} </li>
+            {% endif %}
               <li class="nav-header">Tags</li>
                 {% if link %}
                 {% for t in link [3] %}
@@ -44,9 +46,12 @@ value="{{link [1]}}"
                 {% endfor %}
                 {% endif %}
               <li class="nav-header">Actions</li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
+                {% if link %}
+                {% for a in link [4] %}
+                    <li>{{ a }}</li>
+                {% endfor %}
+                {% endif %}
+
             </ul>
           </div><!--/.well -->
  

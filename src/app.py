@@ -69,6 +69,7 @@ class RootController:
 
         tags = []
         actions = []
+        attributes = []
         for s in [x.strip() for x in ' '.join (notes.split ('\n')).split (' ')]:
             if s.startswith ('#'):
                 tags.append (s [1:])
@@ -80,7 +81,7 @@ class RootController:
         if len (actions) == 0:
             actions = None
 
-        self.repository.save_link (url, notes, link_id=link_id, tags=tags, actions=actions)
+        self.repository.save_link (url, notes, link_id=link_id, tags=tags, actions=actions, attributes=attributes)
 
     @expose
     @output_json

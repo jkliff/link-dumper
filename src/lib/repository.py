@@ -5,7 +5,7 @@ if '2.5' > psycopg2.__version__:
     raise Exception ('SEVERE: psycopg version 2.5 or greater is required. Version in use was %s' % psycopg2.__version__)
 
 SQL = {
-    'save_link' : 'select * from linkdump_api.save_link (%s, %s, %s, %s)',
+    'save_link' : 'select * from linkdump_api.save_link (%s::integer, %s, %s, %s::text[], %s::text[], %s::text[])',
 
     'search': """
 with links as (
@@ -31,6 +31,10 @@ select l_id, l_url, l_notes,
             from linkdump_data.link_tag
                 left join linkdump_data.tag on lt_tag_id = t_id
             where lt_link_id = l_id),
+    ARRAY ( select a_name
+            from linkdump_data.link_action
+                left join linkdump_data.action on la_action_id = a_id
+            where la_link_id = l_id),
     l_created,
     l_last_modified
 from linkdump_data.link
@@ -63,13 +67,13 @@ class Repository(object):
         return self.Connection (self.db)
 
 
-    def save_link (self, url, notes, link_id=None, tags=None, actions=None):
+    def save_link (self, url, notes, link_id=None, tags=None, actions=None, attributes=None):
 
         tag_rel = []
         with (self.getconn ()) as conn:
             with (conn.cursor ()) as c:
-
-                c.execute (SQL ['save_link'], (link_id, url, notes, tags))
+                print c.mogrify (SQL ['save_link'], (link_id, url, notes, tags, actions, attributes))
+                c.execute (SQL ['save_link'], (link_id, url, notes, tags, actions, attributes))
 
                 link_id = c.fetchone () [0]
 

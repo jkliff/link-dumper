@@ -32,8 +32,6 @@ class CherryPyCallRenderWrapper (object):
             print 'wrapper...', args, kw
             d = fn (*args, **kw)
             d ['base'] = BASE_URL
-            if not d ['base'].endswith ('/'):
-                d ['base'] += '/'
             print 'data', d
 
             return self.template.render (d)
@@ -167,6 +165,9 @@ def read_config (path):
     settings.bind = d ['bind']
     settings.port = d ['port']
     settings.base_url = d ['base_url']
+    if not settings.base_url.endswith ('/'):
+       settings.base_url += '/'
+
 
     if None in (settings.bind, settings.port, settings.db_connection):
         raise Exception ("Configuration incomplete. Can't start: [%s]" % settings)

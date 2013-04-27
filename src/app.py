@@ -32,6 +32,8 @@ class CherryPyCallRenderWrapper (object):
             print 'wrapper...', args, kw
             d = fn (*args, **kw)
             d ['base'] = BASE_URL
+            if not d ['base'].endswith ('/'):
+                d ['base'] += '/'
             print 'data', d
 
             return self.template.render (d)

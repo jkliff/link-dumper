@@ -1,4 +1,5 @@
 create schema linkdump_data;
+
 create table linkdump_data.link (
     l_id serial primary key,
     l_url text,

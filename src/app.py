@@ -58,11 +58,14 @@ class RootController:
     @expose
     @render (template='edit_link.jtml')
     def edit_link (self, l_id=None):
-        print l_id
-        return {}
+        link = self.repository.load_link (l_id)
+        return {'link' : link}
 
     @expose
-    def save_link (self, url, notes):
+    def save_link (self, url, notes, link_id=None):
+        # FIXME: handle encoding properly (through cherrypy itself)
+        print url, notes.encode ('utf-8'), link_id
+        notes = notes.encode ('utf-8')
 
         tags = []
         actions = []
@@ -77,7 +80,7 @@ class RootController:
         if len (actions) == 0:
             actions = None
 
-        self.repository.save_link (url, notes, tags, actions)
+        self.repository.save_link (url, notes, link_id=link_id, tags=tags, actions=actions)
 
     @expose
     @output_json
@@ -124,7 +127,7 @@ class RootController:
         r = re.compile (r'(http.*)')
         urls = []
         non_urls = []
- 
+
         for i in s:
             if r.match (i) is None:
                 non_urls.append (i)
@@ -180,7 +183,12 @@ def main ():
 
     BASE_URL = settings.base_url
 
-    cherrypy.config.update({'server.socket_host': settings.bind, 'server.socket_port': settings.port})
+    cherrypy.config.update({
+        'server.socket_host':       settings.bind,
+        'server.socket_port':       settings.port,
+        'tools.encode.on':          True,
+        'tools.encode.encoding':    'utf-8'
+    })
 
     repository = Repository (settings.db_connection)
 

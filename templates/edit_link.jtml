@@ -10,11 +10,20 @@
         <div class="span6">
             <h3>Edit link</h3>
             <form id="formLinkEdit" action="save_link" method="POST">
+                {% if link %}
+                <input type="hidden" name="link_id" value="{{ link[0] }}" >
+                {% endif %}
                 <fieldset>
                     <label>URL</label>
-                    <input name="url" type="text" class="input-xxlarge" placeholder="url">
+                    <input name="url" type="text" class="input-xxlarge" placeholder="url"
+
+                    {% if link %}
+value="{{link [1]}}"
+                    {% endif %}
+
+                    >
                     <label>Notes</label>
-                    <textarea name="notes" rows="10" class="input-xxlarge" placeholder="description"></textarea>
+                    <textarea name="notes" rows="10" class="input-xxlarge" placeholder="description">{% if link%}{{ link [2] }}{% endif %}</textarea>
                 </fieldset>
                 <button id="formLinkEditSubmit" type="button" class="btn">Save</button>
             </form>
@@ -28,11 +37,12 @@
               <li>Created</li>
               <li>Last modified</li>
 
-               <li class="nav-header">Tags</li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
-              <li><a href="#">Link</a></li>
+              <li class="nav-header">Tags</li>
+                {% if link %}
+                {% for t in link [3] %}
+                    <li>{{ t }}</li>
+                {% endfor %}
+                {% endif %}
               <li class="nav-header">Actions</li>
               <li><a href="#">Link</a></li>
               <li><a href="#">Link</a></li>

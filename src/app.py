@@ -122,7 +122,7 @@ class RootController:
         if q is None:
             return {}
 
-        s = [x.strip () for x in re.split (r'\n| ', q)]
+        s = [x.strip () for x in re.split (r'[\n| \"\']', q)]
 
         r = re.compile (r'(http.*)')
         urls = []

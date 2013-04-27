@@ -56,7 +56,6 @@ class Repository(object):
             return self.conn
 
         def __exit__(self, type, value, traceback):
-            print 'commit'
             self.conn.commit ()
             self.db.putconn (self.conn)
 
@@ -64,35 +63,15 @@ class Repository(object):
         return self.Connection (self.db)
 
 
-    #def add_tag (self, link_id, tag_id):
-    #    print link_id, tag_id
-    #    with (self.getconn ()) as conn:
-    #        with (conn.cursor ()) as c:
-    #            c.execute (SQL ['add_tag'], (link_id, tag_id))
-
     def save_link (self, url, notes, link_id=None, tags=None, actions=None):
 
         tag_rel = []
         with (self.getconn ()) as conn:
             with (conn.cursor ()) as c:
 
-               # if link_id is None:
-
-               #     c.execute (SQL ['save_link'], (url, notes))
-
-               #     link_id = c.fetchone () [0]
-               # else:
-               #     c.execute (SQL ['update_link'], (url, notes, link_id))
-               # if tags is not None:
-               #     c.execute (SQL ['find_needed_tags'], (tags,))
-               #     tag_rel = c.fetchall ()
                 c.execute (SQL ['save_link'], (link_id, url, notes, tags))
 
                 link_id = c.fetchone () [0]
-                print link_id
-        #for t in tag_rel:
-        #    self.add_tag (link_id, t [0])
-
 
         return link_id
 
@@ -115,20 +94,6 @@ class Repository(object):
             with (conn.cursor ()) as c:
                 c.execute (q, (l_id, ))
                 return c.fetchone ()
-
-#    def list_last_links (self, limit):
-#        q = """select l_id, l_url, ARRAY(select t_name
-#                    from linkdump_data.link_tag
-#                        join linkdump_data.tag on t_id = lt_tag_id
-#                    where lt_link_id = l_id)
-#from linkdump_data.link
-#order by l_last_modified
-#limit %s"""
-#
-#        with (self.getconn ()) as conn:
-#            with (conn.cursor ()) as c:
-#                c.execute (q, (limit,))
-#                return c.fetchall()
 
     def search (self, terms, tags, actions):
 

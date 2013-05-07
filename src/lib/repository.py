@@ -7,6 +7,8 @@ if '2.5' > psycopg2.__version__:
 SQL = {
     'save_link' : 'select * from linkdump_api.save_link (%s::integer, %s, %s, %s::text[], %s::text[], %s::text[])',
 
+    'get_link' : 'select * from linkdump_api.get_link (%s::integer, %s::text) t(integer, text)',
+
     'search': """
 with links as (
 select distinct l_id
@@ -69,15 +71,20 @@ class Repository(object):
 
     def save_link (self, url, notes, link_id=None, tags=None, actions=None, attributes=None):
 
+        resp = {}
+
         tag_rel = []
         with (self.getconn ()) as conn:
             with (conn.cursor ()) as c:
-                print c.mogrify (SQL ['save_link'], (link_id, url, notes, tags, actions, attributes))
-                c.execute (SQL ['save_link'], (link_id, url, notes, tags, actions, attributes))
+                c.execute (SQL ['get_link'], (None, url))
+                r = c.fetchall ()[0]
+                if link_id is None and r[0] is not None:
+                    resp ['exists'] = True
+                else:
+                    c.execute (SQL ['save_link'], (link_id, url, notes, tags, actions, attributes))
+                    resp ['link_id'] = c.fetchone () [0]
 
-                link_id = c.fetchone () [0]
-
-        return link_id
+        return resp
 
     def list_tags (self):
         with (self.getconn ()) as conn:

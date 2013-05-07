@@ -3,58 +3,67 @@
 
 {% block content %}
 
-       <div class="span3">
-       </div><!--/span-->
-
-
-        <div class="span6">
+        <div class="span8">
             <h3>Edit link</h3>
             <form id="formLinkEdit" action="save_link" method="POST">
                 {% if link %}
                 <input type="hidden" name="link_id" value="{{ link[0] }}" >
                 {% endif %}
                 <fieldset>
-                    <label>URL</label>
-                    <input name="url" type="text" class="input-xxlarge" placeholder="url"
 
+                <div>
+
+                    <div id="control-group-url" class="control-group">
+                        <label class="control-label">URL</label>
+                        <input name="url" type="text" class="input-xxlarge" placeholder="url"
                     {% if link %}
 value="{{link [1]}}"
                     {% endif %}
 
-                    >
-                    <label>Notes</label>
-                    <textarea name="notes" rows="10" class="input-xxlarge" placeholder="description">{% if link%}{{ link [2] }}{% endif %}</textarea>
+                        >
+                        <span class="help-inline hidden">Duplicate URL</span>
+                    </div>
+                    <div class="control-group">
+
+                            <label>Notes</label>
+                            <textarea name="notes" rows="10" class="input-xxlarge" placeholder="description">{% if link%}{{ link [2] }}{% endif %}</textarea>
+                        </div>
+
+                        <!--div class="span3">
+                          <div class="well sidebar-nav">
+                            <ul class="nav nav-list">
+                              <li class="nav-header">Link info</li>
+                            {% if link %}
+
+                              <li><a href="" target="_blank">Visit</a></li>
+                              <li>Created {{ link [5] }}</li>
+                              <li>Last modified {{ link [6]}} </li>
+                            {% endif %}
+                              <li class="nav-header">Tags</li>
+                                {% if link %}
+                                {% for t in link [3] %}
+                                    <li>{{ t }}</li>
+                                {% endfor %}
+                                {% endif %}
+                              <li class="nav-header">Actions</li>
+                                {% if link %}
+                                {% for a in link [4] %}
+                                    <li>{{ a }}</li>
+                                {% endfor %}
+                                {% endif %}
+
+                            </ul>
+                          </div><!--/.well -->
+
+                        <!--/div-->
+
+
+
+                    </div>
                 </fieldset>
-                <button id="formLinkEditSubmit" type="button" class="btn">Save</button>
+                <button id="formLinkEditSubmit" type="button" class="btn btn-primary">Save</button>
             </form>
         </div>
 
-        <div class="span3">
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="nav-header">Link info</li>
-            {% if link %}
-
-              <li><a href="" target="_blank">Visit</a></li>
-              <li>Created {{ link [5] }}</li>
-              <li>Last modified {{ link [6]}} </li>
-            {% endif %}
-              <li class="nav-header">Tags</li>
-                {% if link %}
-                {% for t in link [3] %}
-                    <li>{{ t }}</li>
-                {% endfor %}
-                {% endif %}
-              <li class="nav-header">Actions</li>
-                {% if link %}
-                {% for a in link [4] %}
-                    <li>{{ a }}</li>
-                {% endfor %}
-                {% endif %}
-
-            </ul>
-          </div><!--/.well -->
- 
-        </div>
 
 {% endblock %}

@@ -62,6 +62,7 @@ class RootController:
         return {'link' : link}
 
     @expose
+    @output_json
     def save_link (self, url, notes, link_id=None):
         # FIXME: handle encoding properly (through cherrypy itself)
         print url, notes.encode ('utf-8'), link_id
@@ -81,7 +82,9 @@ class RootController:
         if len (actions) == 0:
             actions = None
 
-        self.repository.save_link (url, notes, link_id=link_id, tags=tags, actions=actions, attributes=attributes)
+        resp = self.repository.save_link (url, notes, link_id=link_id, tags=tags, actions=actions, attributes=attributes)
+        print resp
+        return resp
 
     @expose
     @output_json

@@ -56,7 +56,7 @@ BEGIN
             select name
             from unnest (p_tags) t (name)
         ) t on t.name = t_name
-    where t_name is null
+    where t_name is null;
 
     delete from linkdump_data.link_tag where lt_link_id = l_link_id;
 
@@ -107,5 +107,26 @@ $BODY$
 language plpgsql
     volatile
     security definer;
+
+
+create or replace function get_link (
+    integer,    -- id
+    text,        -- url
+    out integer,
+    out text
+) returns record as
+$BODY$
+
+    select l_id, l_url
+    from linkdump_data.link
+    where l_id = $1
+        or l_url = $2;
+
+$BODY$
+language sql
+    volatile
+    security definer;
+
+
 
 reset search_path;

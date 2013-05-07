@@ -11,8 +11,22 @@ $('#formLinkEditSubmit').click (function () {
         type: 'POST',
         url: 'save_link',
         data: $('#formLinkEdit').serialize ()
-    }).complete(function() {
-        console.log ('done saving link');
+    }).complete(function(d) {
+
+        var r = $.parseJSON (d.responseText);
+
+        if (r.exists) {
+            console.log ('replace info');
+            $('#control-group-url').addClass ('warning');
+            $('#control-group-url .help-inline').removeClass ('hidden');
+
+            
+        } else {
+
+            console.log ('done saving link');
+            $('#formConfirmBulkImport .btn').removeAttr("disabled");
+
+        }
     }).error (DEFAULT_ERROR_HANDLER);
 });
 

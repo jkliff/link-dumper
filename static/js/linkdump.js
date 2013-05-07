@@ -52,7 +52,7 @@ $('#bulkImportSubmit').click (function () {
         });
 
         if (r.urls.length > 0) {
-            $('#formConfirmBulkImport .btn').removeAttr("disabled");
+            $('#formConfirmBulkImport .btn').removeAttr("disabled").addClass ("btn-primary");
         }
 
     }).error (DEFAULT_ERROR_HANDLER);

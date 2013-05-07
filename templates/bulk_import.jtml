@@ -5,10 +5,8 @@
 
 <div class="span12">
 
-    <h2>Bulk link import</h2>
+    <h3>Bulk link import</h3>
 
-
-    <div class="span6">
     <form id="formBulkImport">
         <input type="hidden" name="mode" value="" />
         <fieldset>
@@ -17,21 +15,16 @@
         </fieldset>
         <button id="bulkImportSubmit" type="button" class="btn">Submit</button>
     </form>
-    </div>
 
 
-    <div class="span4">
-        <form id="formConfirmBulkImport" action="perform_bulk_import" method="POST">
-            <input type="hidden" name="mode" value="perform" />
-            <input id="formConfirmResolvedUrls" type="hidden" name="q" value="" />
-            <fieldset>
-                <label>Identified URLs:</label>
-                <ol id="resolvedUrls"></ol>
-            </fieldset>
-            <input type="submit" class="btn" disabled value="Confirm">
-        </form>
-        <ul id="non_urls"></ul>
-    </div>
+    <form id="formConfirmBulkImport" action="perform_bulk_import" method="POST">
+        <input type="hidden" name="mode" value="perform" />
+        <input id="formConfirmResolvedUrls" type="hidden" name="q" value="" />
+        <h4>Identified URLs:</h4>
+        <ol id="resolvedUrls"></ol>
+        <input type="submit" class="btn" disabled value="Confirm">
+    </form>
+    <ul id="non_urls"></ul>
 </div>
 
 {% endblock %}

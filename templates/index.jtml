@@ -4,9 +4,8 @@
 
        <div class="span12">
 
-
             <form id="formMainSearch">
-              <input class="span6" name="q" type="text" placeholder="Search">
+              <input class="input-xxlarge" name="q" type="text" placeholder="Search">
             </form>
 
 

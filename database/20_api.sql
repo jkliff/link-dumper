@@ -49,18 +49,14 @@ BEGIN
 
     raise info 'setting tags';
 
-    for l_n in
-
-        select name
-        from linkdump_data.tag
-            right join (
-                select name
-                from unnest (p_tags) t (name)
-            ) t on t.name = t_name
-        where t_name is null
-    loop
-        insert into linkdump_data.tag (t_name) values (l_n);
-    end loop;
+    insert into linkdump_data.tag (t_name)
+    select name
+    from linkdump_data.tag
+        right join (
+            select name
+            from unnest (p_tags) t (name)
+        ) t on t.name = t_name
+    where t_name is null
 
     delete from linkdump_data.link_tag where lt_link_id = l_link_id;
 
@@ -79,18 +75,14 @@ BEGIN
 
     raise info 'setting actions';
 
-    for l_n in
-
-        select name
-        from linkdump_data.action
-            right join (
-                select name
-                from unnest (p_actions) t (name)
-            ) t on t.name = a_name
-        where a_name is null
-    loop
-        insert into linkdump_data.action (a_name) values (l_n);
-    end loop;
+    insert into linkdump_data.action (a_name)
+    select name
+    from linkdump_data.action
+        right join (
+            select name
+            from unnest (p_actions) t (name)
+        ) t on t.name = a_name
+    where a_name is null;
 
     delete from linkdump_data.link_action where la_link_id = l_link_id;
 
@@ -106,10 +98,6 @@ BEGIN
                     and la_link_id = l_link_id
             where la_action_id is null
     ) t;
-
-
-
-
 
     return l_link_id;
 

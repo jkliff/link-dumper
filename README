@@ -4,3 +4,8 @@ depends on psycopg2 2.5
 cherrypy
 jinja2
 pyyaml
+
+
+startup: 
+
+./start envs/dev.conf

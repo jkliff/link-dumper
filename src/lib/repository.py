@@ -69,6 +69,15 @@ class Repository(object):
         return self.Connection (self.db)
 
 
+    def get_link (self, link_id, url):
+        with (self.getconn ()) as conn:
+            with (conn.cursor ()) as c:
+                c.execute (SQL ['get_link'], (link_id, url))
+                r = c.fetchall ()[0]
+                return r [0]
+
+
+
     def save_link (self, url, notes, link_id=None, tags=None, actions=None, attributes=None):
 
         resp = {}

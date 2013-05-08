@@ -34,6 +34,11 @@ $('#bulkImportSubmit').click (function () {
     console.log ('bulk import submit', $('#formBulkImport').serialize ());
 
     var d = $('#formBulkImport');
+    var resolvedUrls = $('#resolvedUrlList');
+    resolvedUrls.empty();
+    $('#bulkImportSubmitProgress').removeClass ('hidden');
+    $('#bulkImportSubmit').addClass ('hidden');
+
     d.mode = 'check';
     $.ajax ({
         type: 'POST',
@@ -42,13 +47,21 @@ $('#bulkImportSubmit').click (function () {
     }).complete (function (data) {
         console.log ('got data: ', data);
 
+        $('#bulkImportSubmitProgress').addClass ('hidden');
+        $('#bulkImportSubmit').removeClass ('hidden');
+
         var r = $.parseJSON (data.responseText);
         var q = $ ('#formConfirmBulkImport [name=q]');
         q.val (r.urls.join (' '));
 
+        $ ('#resolvedUrls').removeClass ('hidden');
+
         $.each (r.urls, function (idx, val) {
-            $('#resolvedUrls').append ('<li>' + val+ '</li>');
-            console.log ('add', val);
+            var existing = r.existing.indexOf (val) > -1;
+            var hint = existing ? '<span class="label label-important">duplicated</span> ' : '';
+;
+            console.log ('existing? ', hint, val);
+            resolvedUrls.append ('<li class="">' + hint + val + '</li>');
         });
 
         if (r.urls.length > 0) {

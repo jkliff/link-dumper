@@ -14,15 +14,20 @@
             <textarea rows="10" name="q" class="input-xxlarge" placeholder="urls"></textarea>
         </fieldset>
         <button id="bulkImportSubmit" type="button" class="btn">Submit</button>
+        <div id="bulkImportSubmitProgress" class="progress progress-striped active hidden">
+          <div class="bar" style="width: 100%;"></div>
+        </div>
     </form>
 
 
     <form id="formConfirmBulkImport" action="perform_bulk_import" method="POST">
         <input type="hidden" name="mode" value="perform" />
         <input id="formConfirmResolvedUrls" type="hidden" name="q" value="" />
-        <h4>Identified URLs:</h4>
-        <ol id="resolvedUrls"></ol>
-        <input type="submit" class="btn" disabled value="Confirm">
+        <div id="resolvedUrls" class="hidden">
+            <h4>Identified URLs:</h4>
+            <ul id="resolvedUrlList"></ul>
+            <input type="submit" class="btn" disabled value="Confirm">
+        <div>
     </form>
     <ul id="non_urls"></ul>
 </div>

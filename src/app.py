@@ -131,12 +131,17 @@ class RootController:
         r = re.compile (r'(http.*)')
         urls = []
         non_urls = []
+        existing = []
 
         for i in s:
             if r.match (i) is None:
-                non_urls.append (i)
-            else:
-                urls.append (i)
+                continue
+
+            urls.append (i)
+
+            if self.repository.get_link (None, i) is not None:
+                existing.append (i)
+
         if mode == 'perform':
             ids = []
             for i in urls:
@@ -145,7 +150,7 @@ class RootController:
 
             raise cherrypy.HTTPRedirect (BASE_URL)
 
-        return {'urls': urls, 'non_urls': non_urls}
+        return {'urls': urls, 'non_urls': non_urls, 'existing': existing}
 
 
 class Settings:

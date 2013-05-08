@@ -5,11 +5,15 @@
        <div class="span12">
 
             <form id="formMainSearch">
-              <input class="input-xxlarge" name="q" type="text" placeholder="Search">
+                <label>Search</label>
+                <input class="input-xxlarge" name="q" type="text" placeholder="Search">
             </form>
 
+            <div id="searchMainResultProgress" class="progress progress-striped active hidden">
+                <div class="bar" style="width: 100%;"></div>
+            </div>
 
-            <table class="table table-hover table-condensed">
+            <table id="searchMainResult" class="table table-hover table-condensed hidden">
                 <thead>
                     <th>Url</th>
                     <th>Tags</th>

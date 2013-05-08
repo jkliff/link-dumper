@@ -75,19 +75,29 @@ $('#bulkImportSubmit').click (function () {
 $('#formMainSearch').submit (function () {
     var q = $('#formMainSearch').serialize();
 
+    $('#searchMainResultProgress').removeClass ('hidden');
+    $('#searchMainResult').addClass ('hidden');
+
     $.ajax ({
         type: 'POST',
         url: 'search',
         data: q
     }).success(function (data) {
+
+        $('#searchMainResultProgress').addClass ('hidden');
+        $('#searchMainResult').removeClass ('hidden');
+
         var links = $.parseJSON (data).links;
-        console.log (links);
+
         var tb = $('#resultTableBody');
         tb.find ('tr').remove();
+
         for (i in links) {
-            console.log (links [i]);
+
             tb.append ('<tr><td><a href="' + links[i][1] + '">' + links[i][1] + '</a> <a class="pull-right" href="edit_link?l_id=' + links[i][0] + '">Edit</a></td><td>' +  links[i][2] + '</td><tr>');
+
         }
+
     }).error (DEFAULT_ERROR_HANDLER);
 
     return false;

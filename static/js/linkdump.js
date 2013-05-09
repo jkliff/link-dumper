@@ -1,3 +1,40 @@
+String.prototype.capitalize = function () {
+    return this.replace(/^./, function (char) {
+        return char.toUpperCase();
+    });
+};
+
+
+MainLinkToggleFactory = {
+
+    mainTabs: ['home', 'linkEdit', 'bulkImport', 'about'],
+
+    create: function (target) {
+        console.log ('creating function for ', target);
+        return function (t, tabs) {
+
+            console.log ('executing creationg', t, tabs);
+            return function () {
+                console.log ('clicked on ', t, 'knows', tabs);
+                for (i in tabs) {
+
+                    var el = $('#canvas' + tabs [i].capitalize ());
+
+                    if (t == tabs [i]) {
+                        el.removeClass ('hidden');
+                        continue;
+                    }
+                    el.addClass ('hidden');
+                }
+            }
+        } (target, this.mainTabs);
+    }
+}
+
+$('#mainLinkHome').click (MainLinkToggleFactory.create ('home'));
+$('#mainLinkLinkEdit').click (MainLinkToggleFactory.create ('linkEdit'));
+$('#mainLinkBulkImport').click (MainLinkToggleFactory.create ('bulkImport'));
+$('#mainLinkAbout').click (MainLinkToggleFactory.create ('about'));
 
 DEFAULT_ERROR_HANDLER = function () {
     alert ('there was an error saving. check server logs');

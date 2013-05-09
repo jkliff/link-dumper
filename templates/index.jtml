@@ -1,27 +1,20 @@
-{% extends "base.jtml" %}
-{% block link_class_active_home %}class="active"{% endblock %}
-{% block content %}
 
-       <div class="span12">
+     <form id="formMainSearch">
+         <label>Search</label>
+         <input class="input-xxlarge" name="q" type="text" placeholder="Search">
+     </form>
 
-            <form id="formMainSearch">
-                <label>Search</label>
-                <input class="input-xxlarge" name="q" type="text" placeholder="Search">
-            </form>
+     <div id="searchMainResultProgress" class="progress progress-striped active hidden">
+         <div class="bar" style="width: 100%;"></div>
+     </div>
 
-            <div id="searchMainResultProgress" class="progress progress-striped active hidden">
-                <div class="bar" style="width: 100%;"></div>
-            </div>
+     <table id="searchMainResult" class="table table-hover table-condensed hidden">
+         <thead>
+             <th>Url</th>
+             <th>Tags</th>
+         </thead>
+         <tbody id="resultTableBody">
+             <!-- filled by javascript -->
+         </tbody>
+     </table>
 
-            <table id="searchMainResult" class="table table-hover table-condensed hidden">
-                <thead>
-                    <th>Url</th>
-                    <th>Tags</th>
-                </thead>
-                <tbody id="resultTableBody">
-                    <!-- filled by javascript -->
-                </tbody>
-            </table>
-       </div><!--/span-->
-
-{% endblock %}

@@ -55,10 +55,10 @@
           <a class="brand" href="{{ base }}">link_dumper</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li {% block link_class_active_home %}{% endblock%}><a href="{{ base }}">Home</a></li>
-              <li {% block link_class_active_edit_link %}{% endblock %}><a href="{{ base }}edit_link">Link edit</a></li>
-              <li {% block link_class_active_bulk_import %}{% endblock %}><a href="{{ base }}bulk_import">Bulk import</a></li>
-
+                <li><a id="mainLinkHome" href="#">Home</a></li>
+                <li><a id="mainLinkLinkEdit" href="#">Link edit</a></li>
+                <li><a id="mainLinkBulkImport" href="#">Bulk import</a></li>
+                <li><a id="mainLinkAbout" href="#">About</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -68,7 +68,22 @@
 <div class="container-fluid">
 
 <div class="row-fluid">
-{%block content %}{{ content }}{% endblock %}
+    <div id="canvasHome"><div class="span12">
+        {% include 'index.jtml' %}
+    </div></div>
+
+    <div id="canvasLinkEdit" class="hidden"><div class="span12">
+        {% include 'edit_link.jtml' %}
+    </div></div>
+
+    <div id="canvasBulkImport" class="hidden"><div class="span12">
+        {% include 'bulk_import.jtml' %}
+    </div></div>
+
+    <div id="canvasAbout" class="hidden span12">
+About
+    </div>
+
 </div>
 </div><!--/.fluid-container-->
 

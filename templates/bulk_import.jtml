@@ -1,9 +1,3 @@
-{% extends "base.jtml" %}
-{% block link_class_active_bulk_import %}class="active"{% endblock %}
-
-{% block content %}
-
-<div class="span12">
 
     <h3>Bulk link import</h3>
 
@@ -36,6 +30,4 @@
             <input id="formConfirmBulkImportConfirm" type="button" class="btn" disabled value="Confirm">
         <div>
     </form>
-</div>
 
-{% endblock %}

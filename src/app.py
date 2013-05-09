@@ -26,7 +26,6 @@ class CherryPyCallRenderWrapper (object):
         env.loader = jinja2.FileSystemLoader(TEMPLATE_PATH)
         self.template = env.get_template(template)
 
-
     def __call__ (self, fn):
         def w (*args, **kw):
             d = fn (*args, **kw)
@@ -49,15 +48,15 @@ class RootController:
         self.repository = repo
 
     @expose
-    @render (template='index.jtml')
+    @render (template='base.jtml')
     def index (self, q=None):
         return {}
 
-    @expose
-    @render (template='edit_link.jtml')
-    def edit_link (self, l_id=None):
-        link = self.repository.load_link (l_id)
-        return {'link' : link}
+    #@expose
+    #@render (template='edit_link.jtml')
+    #def edit_link (self, l_id=None):
+    #    link = self.repository.load_link (l_id)
+    #    return {'link' : link}
 
     @expose
     @output_json
@@ -93,7 +92,6 @@ class RootController:
         return r
 
     @expose
-    #@render (template='index.jtml')
     @output_json
     def search (self, q=None):
 
@@ -112,10 +110,10 @@ class RootController:
         r = { 'links': self.repository.search (terms, tags, actions) or []}
         return r
 
-    @expose
-    @render (template='bulk_import.jtml')
-    def bulk_import (self):
-        return {}
+    #@expose
+    #@render (template='bulk_import.jtml')
+    #def bulk_import (self):
+    #    return {}
 
     @expose
     @output_json

@@ -42,11 +42,15 @@ $('#bulkImportSubmit').click (function () {
     $('#bulkImportSubmitProgress').removeClass ('hidden');
     $('#bulkImportSubmit').addClass ('hidden');
 
+    console.log (d.find ('input[name=ql]').val());
     var p = {
-        q: d.find ('textarea[name=qu]').hasClass ('hidden') ? d.find ('input[name=ql]').val() : d.find ('textarea[name=qu]').val(),
+        q: d.find ('textarea[name=qu]').parent().hasClass ('hidden') ?
+            d.find ('input[name=ql]').val()
+            : d.find ('textarea[name=qu]').val(),
         mode: 'check'
     };
 
+    console.log (p);
     $.ajax ({
         type: 'POST',
         url: 'perform_bulk_import',

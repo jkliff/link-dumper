@@ -30,7 +30,7 @@
             <h4>Identified URLs:</h4>
             <table id="resolvedUrlList" class="table">
 
-                <thead><tr><th>state</th><th>url</th></tr></thead>
+                <thead><tr><th></th><th>Url</th></tr></thead>
                 <tbody id="resolvedUrlsTableBody"></tbody>
             </table>
             <input id="formConfirmBulkImportConfirm" type="submit" class="btn" disabled value="Confirm">

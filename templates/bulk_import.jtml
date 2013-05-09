@@ -14,7 +14,7 @@
                 <textarea rows="10" name="qu" class="input-xxlarge" placeholder="urls"></textarea>
             </div>
             <div id="inputTabLink">
-                <input type="text" name="ql" class="input-xxlarge" placeholder="url"/>
+                <input type="text" name="ql" class="noEnterSubmit input-xxlarge" placeholder="url"/>
             </div>
         <button id="bulkImportSubmit" type="button" class="btn">Submit</button>
         <div id="bulkImportSubmitProgress" class="progress progress-striped active hidden">
@@ -33,7 +33,7 @@
                 <thead><tr><th></th><th>Url</th></tr></thead>
                 <tbody id="resolvedUrlsTableBody"></tbody>
             </table>
-            <input id="formConfirmBulkImportConfirm" type="submit" class="btn" disabled value="Confirm">
+            <input id="formConfirmBulkImportConfirm" type="button" class="btn" disabled value="Confirm">
         <div>
     </form>
 </div>

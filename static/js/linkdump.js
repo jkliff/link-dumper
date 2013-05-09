@@ -50,7 +50,6 @@ $('#bulkImportSubmit').click (function () {
         mode: 'check'
     };
 
-    console.log (p);
     $.ajax ({
         type: 'POST',
         url: 'perform_bulk_import',
@@ -68,11 +67,6 @@ $('#bulkImportSubmit').click (function () {
             return;
         }
 
-        // fixme: read data to be sent from variable
-        var q = $ ('#formConfirmBulkImport[name=q]');
-
-        q.val (r.urls.join (' '));
-
         $ ('#resolvedUrls').removeClass ('hidden');
 
         var tb = resolvedUrls ;// $('#resolvedUrlsTableBody');
@@ -83,7 +77,7 @@ $('#bulkImportSubmit').click (function () {
 
         $.each (r.urls, function (idx, val) {
             var existing = r.existing.indexOf (val) > -1;
-            var hint = existing ? '<span class="duplicateHint" class="label label-important">duplicated</span>' : '<span class="label" id="label">Include</span>';
+            var hint = existing ? '<span class="label label-important">duplicated</span>' : '<span class="label" id="label">Include</span>';
 ;
             console.log ('existing? ', hint, val);
 
@@ -96,11 +90,11 @@ $('#bulkImportSubmit').click (function () {
             }
 
             tr.append (td);
-            td = $('<td><pre></pre></td>');
+            td = $('<td class="urlPlaceholder"></td>');
             td.text(val);
             tr.append (td);
             console.log (tr);
-                        tb.append (tr);
+            tb.append (tr);
             console.log (tb);
         });
         console.log (tb);
@@ -114,11 +108,32 @@ $('#bulkImportSubmit').click (function () {
 });
 
 
+
+$('#formConfirmBulkImportConfirm').click (function () {
+
+    var urls = [];
+    $.each ($('#resolvedUrlsTableBody').find ('tr'), function (idx, val) {
+        console.log ('val', val);
+        var tr = $(val);
+        if (tr.find ('span').hasClass ('label-success')) {
+            console.log ('found', tr);
+            urls.push (tr.find ('td.urlPlaceholder').text ());
+        }
+    });
+
+    if (urls.length > 0) {
+
+        var q = $ ('#formConfirmResolvedUrls');
+        q.val (urls.join (' '));
+        console.log (q.val());
+        $('#formConfirmBulkImport').submit ();
+    }
+});
+
 LinkSelectionToggleFactory = {
 
     create: function (url, el) {
         return function (data) {
-            console.log ('selected', url);
             var s = el.find ('span');
             if (s.hasClass ('label-success')) {
                 s.removeClass ('label-success');
@@ -218,3 +233,10 @@ setCursorPosition = function(el, pos) {
         range.select();
     }
 }
+
+// disable form submission from enter (usually on inputs)
+$('.noEnterSubmit').keypress(function(e){
+    if ( e.which == 13 ) return false;
+    //or...
+    if ( e.which == 13 ) e.preventDefault();
+});

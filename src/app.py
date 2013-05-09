@@ -122,8 +122,9 @@ class RootController:
     def perform_bulk_import (self, mode=None, q=None):
 
         if q is None:
-            print 'q is none'
             return {}
+
+        q = q.encode ('utf-8')
 
         s = [x.strip () for x in re.split (r'[\n| \"\']', q)]
 

@@ -29,10 +29,8 @@ class CherryPyCallRenderWrapper (object):
 
     def __call__ (self, fn):
         def w (*args, **kw):
-            print 'wrapper...', args, kw
             d = fn (*args, **kw)
             d ['base'] = BASE_URL
-            print 'data', d
 
             return self.template.render (d)
         return w
@@ -124,6 +122,7 @@ class RootController:
     def perform_bulk_import (self, mode=None, q=None):
 
         if q is None:
+            print 'q is none'
             return {}
 
         s = [x.strip () for x in re.split (r'[\n| \"\']', q)]

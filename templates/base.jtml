@@ -58,8 +58,12 @@
                 <li><a id="mainLinkHome" href="#" class="active">Home</a></li>
                 <li><a id="mainLinkLinkEdit" href="#">Link edit</a></li>
                 <li><a id="mainLinkBulkImport" href="#">Bulk import</a></li>
+            </ul>
+
+            <ul class="nav pull-right">
                 <li><a id="mainLinkAbout" href="#">About</a></li>
             </ul>
+
           </div><!--/.nav-collapse -->
         </div>
       </div>

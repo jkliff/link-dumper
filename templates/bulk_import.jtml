@@ -9,10 +9,13 @@
 
     <form id="formBulkImport">
         <input type="hidden" name="mode" value="" />
-        <fieldset>
-            <label>Raw data</label>
-            <textarea rows="10" name="q" class="input-xxlarge" placeholder="urls"></textarea>
-        </fieldset>
+            <label>Url</label>
+            <div id="inputTabInput" class="hidden">
+                <textarea rows="10" name="qu" class="input-xxlarge" placeholder="urls"></textarea>
+            </div>
+            <div id="inputTabLink">
+                <input type="text" name="ql" class="input-xxlarge" placeholder="url"/>
+            </div>
         <button id="bulkImportSubmit" type="button" class="btn">Submit</button>
         <div id="bulkImportSubmitProgress" class="progress progress-striped active hidden">
           <div class="bar" style="width: 100%;"></div>

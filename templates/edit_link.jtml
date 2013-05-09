@@ -61,6 +61,11 @@ value="{{link [1]}}"
 
                     </div>
                 </fieldset>
+
+                <div id="formLinkEditSubmitProgress" class="progress progress-striped active hidden">
+                    <div class="bar" style="width: 100%;"></div>
+                </div>
+
                 <button id="formLinkEditSubmit" type="button" class="btn btn-primary">Save</button>
             </form>
         </div>

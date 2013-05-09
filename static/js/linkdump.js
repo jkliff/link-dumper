@@ -1,11 +1,13 @@
+
 DEFAULT_ERROR_HANDLER = function () {
     alert ('there was an error saving. check server logs');
 };
 
 
 $('#formLinkEditSubmit').click (function () {
-    console.log ('submit form', $('#formLinkEdit').serialize ());
-    console.log ('form link', $('#formLinkEdit'));
+
+    $('#formLinkEditSubmitProgress').removeClass ('hidden');
+    $('#formLinkEditSubmit').addClass ('hidden');
 
     $.ajax({
         type: 'POST',
@@ -13,17 +15,17 @@ $('#formLinkEditSubmit').click (function () {
         data: $('#formLinkEdit').serialize ()
     }).complete(function(d) {
 
+        $('#formLinkEditSubmitProgress').addClass ('hidden');
+        $('#formLinkEditSubmit').removeClass ('hidden');
+
         var r = $.parseJSON (d.responseText);
 
         if (r.exists) {
-            console.log ('replace info');
             $('#control-group-url').addClass ('warning');
             $('#control-group-url .help-inline').removeClass ('hidden');
 
-            
         } else {
 
-            console.log ('done saving link');
             $('#formConfirmBulkImport .btn').removeAttr("disabled");
 
         }
@@ -31,27 +33,35 @@ $('#formLinkEditSubmit').click (function () {
 });
 
 $('#bulkImportSubmit').click (function () {
-    console.log ('bulk import submit', $('#formBulkImport').serialize ());
 
     var d = $('#formBulkImport');
+
     var resolvedUrls = $('#resolvedUrlList');
     resolvedUrls.empty();
     $('#bulkImportSubmitProgress').removeClass ('hidden');
     $('#bulkImportSubmit').addClass ('hidden');
 
-    d.mode = 'check';
+    var p = {
+        q: d.ql && d.ql != null? d.ql : d.qu,
+        mode: 'check'
+    };
+
     $.ajax ({
         type: 'POST',
         url: 'perform_bulk_import',
-        data: d.serialize ()
+        data: $(p).serialize ()
     }).complete (function (data) {
-        console.log ('got data: ', data);
 
         $('#bulkImportSubmitProgress').addClass ('hidden');
         $('#bulkImportSubmit').removeClass ('hidden');
 
         var r = $.parseJSON (data.responseText);
+
+        if (!r.urls) return;
+
+        // fixme: read data to be sent from variable
         var q = $ ('#formConfirmBulkImport [name=q]');
+
         q.val (r.urls.join (' '));
 
         $ ('#resolvedUrls').removeClass ('hidden');
@@ -102,3 +112,60 @@ $('#formMainSearch').submit (function () {
 
     return false;
 });
+
+var toggleBulkInputTextarea = function (e, data) {
+
+    var t = $(this).val ();
+    var toShow;
+    var toHide;
+    var contentElement;
+
+    if (t.indexOf (' ') > -1 && t.trim ().indexOf (' ') > -1) {
+        toShow = '#inputTabInput';
+        toHide = '#inputTabLink';
+        targetElement = 'textarea[name=qu]';
+        contentElement = 'input[name=ql]';
+
+    } else {
+        toShow = '#inputTabLink';
+        toHide = '#inputTabInput';
+        contentElement = 'textarea[name=qu]';
+        targetElement = 'input[name=ql]';
+    }
+
+    var toShowEl = $(toShow);
+
+    // if is already the visible element, bye
+    if (!toShowEl.hasClass ('hidden')) {
+        return;
+    }
+
+    var toHideEl = $(toHide);
+
+    var v = toShowEl.find (targetElement)
+    var src = toHideEl.find(contentElement);
+
+    v.val (src.val());
+
+    toHideEl.addClass ('hidden');
+    toShowEl.removeClass ('hidden');
+
+    v.focus ();
+    setCursorPosition (v[0], src[0].selectionStart);
+}
+
+$('#inputTabLink input[name=ql]').keyup (toggleBulkInputTextarea);
+$('#inputTabInput textarea[name=qu]').keyup (toggleBulkInputTextarea);
+
+
+setCursorPosition = function(el, pos) {
+    if (el.setSelectionRange) {
+        el.setSelectionRange(pos, pos);
+    } else if (el.createTextRange) {
+        var range = el.createTextRange();
+        range.collapse(true);
+        range.moveEnd('character', pos);
+        range.moveStart('character', pos);
+        range.select();
+    }
+}

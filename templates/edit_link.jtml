@@ -1,20 +1,12 @@
 <h3>Edit link</h3>
 <form id="formLinkEdit" action="save_link" method="POST">
-    {% if link %}
-    <input type="hidden" name="link_id" value="{{ link[0] }}" >
-    {% endif %}
     <fieldset>
 
     <div>
 
         <div id="control-group-url" class="control-group">
             <label class="control-label">URL</label>
-            <input name="url" type="text" class="input-xxlarge" placeholder="url"
-        {% if link %}
-k [1]}}"
-        {% endif %}
-
-            >
+            <input name="url" type="text" class="input-xxlarge" placeholder="url">
             <span class="help-inline hidden">Duplicate URL</span>
         </div>
         <div class="control-group">

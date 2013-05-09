@@ -4,34 +4,86 @@ String.prototype.capitalize = function () {
     });
 };
 
+var FACTORIES = {
 
-MainLinkToggleFactory = {
+    SearchResultLinkEdit: {
 
-    mainTabs: ['home', 'linkEdit', 'bulkImport', 'about'],
-
-    create: function (target) {
-        return function (t, tabs) {
-
+        create: function (id) {
             return function () {
-                for (i in tabs) {
+                console.log ('to edit link', id);
+                APP.loadLinkToEdit (id);
+            }
+        }
+    },
 
-                    var el = $('#canvas' + tabs [i].capitalize ());
 
-                    if (t == tabs [i]) {
-                        el.removeClass ('hidden');
-                        continue;
-                    }
-                    el.addClass ('hidden');
+    LinkSelectionToggle: {
+
+        create: function (url, el) {
+            return function (data) {
+                var s = el.find ('span');
+                if (s.hasClass ('label-success')) {
+                    s.removeClass ('label-success');
+                    s.text ('Include');
+                } else {
+                    s.addClass ('label-success');
+                    s.text ('Included');
                 }
             }
-        } (target, this.mainTabs);
-    }
-}
+        }
+    },
 
-$('#mainLinkHome').click (MainLinkToggleFactory.create ('home'));
-$('#mainLinkLinkEdit').click (MainLinkToggleFactory.create ('linkEdit'));
-$('#mainLinkBulkImport').click (MainLinkToggleFactory.create ('bulkImport'));
-$('#mainLinkAbout').click (MainLinkToggleFactory.create ('about'));
+
+    MainLinkToggle: {
+
+        mainTabs: ['home', 'linkEdit', 'bulkImport', 'about'],
+
+        create: function (target) {
+            return function (t, tabs) {
+
+                return function () {
+                    console.log ();
+                    for (i in tabs) {
+
+                        var el = $('#canvas' + tabs[i].capitalize());
+                        var src = $('#mainLink' + tabs[i].capitalize()).parent()
+                        if (t == tabs [i]) {
+                            el.removeClass ('hidden');
+                            src.addClass ('active');
+                            continue;
+                        }
+                        el.addClass ('hidden');
+                        src.removeClass ('active');
+                    }
+                }
+            } (target, this.mainTabs);
+        }
+    }
+};
+
+var APP = {
+    loadLinkToEdit : function (id) {
+        FACTORIES.MainLinkToggle.create ('linkEdit') ();
+        console.log ('link to edit');
+
+        $.ajax ({
+            type: 'POST',
+            url: 'edit_link',
+            data: {l_id: id}
+        }).complete (function (data) {
+            var d = $.parseJSON (data.responseText).link;
+            console.log (d);
+            var form = $('#formLinkEdit');
+            form.append ('<input type="hidden" name="link_id" value="' + d[0] + '">');
+            form.find ('input[name=url]').val (d[1]);
+        });
+    }
+};
+
+$('#mainLinkHome').click (FACTORIES.MainLinkToggle.create ('home'));
+$('#mainLinkLinkEdit').click (FACTORIES.MainLinkToggle.create ('linkEdit'));
+$('#mainLinkBulkImport').click (FACTORIES.MainLinkToggle.create ('bulkImport'));
+$('#mainLinkAbout').click (FACTORIES.MainLinkToggle.create ('about'));
 
 DEFAULT_ERROR_HANDLER = function () {
     alert ('there was an error saving. check server logs');
@@ -119,7 +171,7 @@ $('#bulkImportSubmit').click (function () {
             td.append (hint)
 
             if (!existing) {
-                td.click (LinkSelectionToggleFactory.create (val, td));
+                td.click (FACTORIES.LinkSelectionToggle.create (val, td));
             }
 
             tr.append (td);
@@ -156,22 +208,6 @@ $('#formConfirmBulkImportConfirm').click (function () {
     }
 });
 
-LinkSelectionToggleFactory = {
-
-    create: function (url, el) {
-        return function (data) {
-            var s = el.find ('span');
-            if (s.hasClass ('label-success')) {
-                s.removeClass ('label-success');
-                s.text ('Include');
-            } else {
-                s.addClass ('label-success');
-                s.text ('Included');
-            }
-        }
-    }
-};
-
 $('#formMainSearch').submit (function () {
     var q = $('#formMainSearch').serialize();
 
@@ -201,8 +237,7 @@ $('#formMainSearch').submit (function () {
             td.append ($(a));
             a = $('<a class="pull-right">Edit</a>');
 
-            a.click (SearchResultLinkEditFactory.create (links[i][0]));
-
+            a.click (FACTORIES.SearchResultLinkEdit.create (links[i][0]));
 
             td.append (a);
             tr.append (td);
@@ -216,16 +251,6 @@ $('#formMainSearch').submit (function () {
 
     return false;
 });
-
-SearchResultLinkEditFactory = {
-
-    create: function (id) {
-        return function () {
-            console.log ('to edit link', id);
-        }
-    }
-}
-
 
 var toggleBulkInputTextarea = function (e, data) {
 
@@ -287,6 +312,4 @@ setCursorPosition = function(el, pos) {
 // disable form submission from enter (usually on inputs)
 $('.noEnterSubmit').keypress(function(e){
     if ( e.which == 13 ) return false;
-    //or...
-    if ( e.which == 13 ) e.preventDefault();
 });

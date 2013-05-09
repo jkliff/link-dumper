@@ -52,11 +52,12 @@ class RootController:
     def index (self, q=None):
         return {}
 
-    #@expose
+    @expose
     #@render (template='edit_link.jtml')
-    #def edit_link (self, l_id=None):
-    #    link = self.repository.load_link (l_id)
-    #    return {'link' : link}
+    @output_json
+    def edit_link (self, l_id=None):
+        link = self.repository.load_link (l_id)
+        return {'link' : link}
 
     @expose
     @output_json

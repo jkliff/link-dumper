@@ -37,8 +37,8 @@ select l_id, l_url, l_notes,
             from linkdump_data.link_action
                 left join linkdump_data.action on la_action_id = a_id
             where la_link_id = l_id),
-    l_created,
-    l_last_modified
+    l_created::text,
+    l_last_modified::text
 from linkdump_data.link
 where l_id = %s"""
 

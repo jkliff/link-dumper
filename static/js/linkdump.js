@@ -10,12 +10,9 @@ MainLinkToggleFactory = {
     mainTabs: ['home', 'linkEdit', 'bulkImport', 'about'],
 
     create: function (target) {
-        console.log ('creating function for ', target);
         return function (t, tabs) {
 
-            console.log ('executing creationg', t, tabs);
             return function () {
-                console.log ('clicked on ', t, 'knows', tabs);
                 for (i in tabs) {
 
                     var el = $('#canvas' + tabs [i].capitalize ());
@@ -39,7 +36,6 @@ $('#mainLinkAbout').click (MainLinkToggleFactory.create ('about'));
 DEFAULT_ERROR_HANDLER = function () {
     alert ('there was an error saving. check server logs');
 };
-
 
 $('#formLinkEditSubmit').click (function () {
 
@@ -130,9 +126,7 @@ $('#bulkImportSubmit').click (function () {
             td = $('<td class="urlPlaceholder"></td>');
             td.text(val);
             tr.append (td);
-            console.log (tr);
             tb.append (tr);
-            console.log (tb);
         });
         console.log (tb);
 
@@ -144,16 +138,12 @@ $('#bulkImportSubmit').click (function () {
 
 });
 
-
-
 $('#formConfirmBulkImportConfirm').click (function () {
 
     var urls = [];
     $.each ($('#resolvedUrlsTableBody').find ('tr'), function (idx, val) {
-        console.log ('val', val);
         var tr = $(val);
         if (tr.find ('span').hasClass ('label-success')) {
-            console.log ('found', tr);
             urls.push (tr.find ('td.urlPlaceholder').text ());
         }
     });
@@ -162,7 +152,6 @@ $('#formConfirmBulkImportConfirm').click (function () {
 
         var q = $ ('#formConfirmResolvedUrls');
         q.val (urls.join (' '));
-        console.log (q.val());
         $('#formConfirmBulkImport').submit ();
     }
 });
@@ -205,7 +194,21 @@ $('#formMainSearch').submit (function () {
 
         for (i in links) {
 
-            tb.append ('<tr><td><a href="' + links[i][1] + '">' + links[i][1] + '</a> <a class="pull-right" href="edit_link?l_id=' + links[i][0] + '">Edit</a></td><td>' +  links[i][2] + '</td><tr>');
+            var tr = $('<tr></tr>');
+            var td = $('<td></td>');
+
+            var a = '<a href="' + links[i][1] + '">' + links[i][1] + '</a>';
+            td.append ($(a));
+            a = $('<a class="pull-right">Edit</a>');
+
+            a.click (SearchResultLinkEditFactory.create (links[i][0]));
+
+
+            td.append (a);
+            tr.append (td);
+
+            tr.append ('<td>' + links[i][2] + '</td>');
+            tb.append (tr);
 
         }
 
@@ -213,6 +216,16 @@ $('#formMainSearch').submit (function () {
 
     return false;
 });
+
+SearchResultLinkEditFactory = {
+
+    create: function (id) {
+        return function () {
+            console.log ('to edit link', id);
+        }
+    }
+}
+
 
 var toggleBulkInputTextarea = function (e, data) {
 

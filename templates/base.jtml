@@ -55,7 +55,7 @@
           <a class="brand" href="{{ base }}">link_dumper</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-                <li><a id="mainLinkHome" href="#" class="active">Home</a></li>
+                <li class="active"><a id="mainLinkHome" href="#">Home</a></li>
                 <li><a id="mainLinkLinkEdit" href="#">Link edit</a></li>
                 <li><a id="mainLinkBulkImport" href="#">Bulk import</a></li>
             </ul>

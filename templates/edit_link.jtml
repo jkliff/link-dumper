@@ -10,10 +10,9 @@
             <span class="help-inline hidden">Duplicate URL</span>
         </div>
         <div class="control-group">
-
-                <label>Notes</label>
-                <textarea name="notes" rows="10" class="input-xxlarge" placeholder="description">{% if link%}{{ link [2] }}{% endif %}</textarea>
-            </div>
+            <label>Notes</label>
+            <textarea name="notes" rows="10" class="input-xxlarge" placeholder="notes"></textarea>
+        </div>
 
             <!--div class="span3">
               <div class="well sidebar-nav">

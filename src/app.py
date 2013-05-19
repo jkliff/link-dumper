@@ -4,11 +4,10 @@ import re
 
 import cherrypy
 import jinja2
-from lib.repository import Repository
 import yaml
 
+from lib.repository import Repository
 
-expose = cherrypy.expose
 
 CHERRYPY_CONF = {
     '/': {'tools.encode.on': True, 'tools.encode.encoding': 'utf-8'},
@@ -48,6 +47,7 @@ def cherrypy_json_output_wrapper(fn):
 
 render = CherryPyCallRenderWrapper
 output_json = cherrypy_json_output_wrapper
+expose = cherrypy.expose
 
 
 class RootController:

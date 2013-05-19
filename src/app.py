@@ -194,7 +194,7 @@ def main():
     global BASE_URL
     from argparse import ArgumentParser
 
-    parser = ArgumentParser(description='Order Cockpit')
+    parser = ArgumentParser(description='link_dump')
     parser.add_argument('-c', '--config', help='Path to config file.', dest='config', required=True)
 
     args = parser.parse_args()

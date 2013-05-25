@@ -166,6 +166,7 @@ class Settings:
         self.db_connection = None
         self.bind = None
         self.port = None
+        self.base_url = None
 
     def __repr__(self):
         return str(self.__dict__)

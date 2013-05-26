@@ -6,6 +6,9 @@ jinja2
 pyyaml
 
 
+solr    
+
+
 startup: 
 
 ./start envs/dev.conf

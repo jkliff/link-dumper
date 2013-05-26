@@ -250,45 +250,78 @@ $('#formConfirmBulkImportConfirm').click(function () {
 });
 
 $('#formMainSearch').submit(function () {
-    var q = $('#formMainSearch').serialize();
+    var f = $('#formMainSearch');
+    var fv = f.find('input[name=q]').val();
+    fv = fv == '' ? '*' : fv;
 
-    $('#searchMainResultProgress').removeClass('hidden');
-    $('#searchMainResult').addClass('hidden');
+    var q = f.serialize();
+
+    var tpl = $('#tplSearchResult');
+    var placeholder = $('#searchResultsPlaceholder');
+    var res = tpl.clone();
+    res.removeAttr('id');
+    res.removeClass('hidden');
+    res.addClass('span9');
+
+    res.find('.searchMainResultProgress').removeClass('hidden');
+    res.find('.searchMainResult').addClass('hidden');
+
+    placeholder.append(res);
+
+    var el = $('<li><a>' + fv + '</a></li>');
+
+    var hideOtherResults = function (resultDiv, li) {
+        return function () {
+            $('#searchResultsPlaceholder').find('div').addClass('hidden').removeClass ('span9 pull-left');
+            $('#searchesList').find('li').removeClass('active');
+            resultDiv.removeClass('hidden').addClass ('span9 pull-left');
+            
+            el.addClass('active');
+        }
+    }(res, el);
+
+    hideOtherResults();
+
+    el.click(hideOtherResults);
+
+    $('#searchesList').append(el);
 
     $.ajax({
         type: 'POST',
         url: 'search',
         data: q
-    }).success(function (data) {
+    }).success(
+            function (resultDiv) {
+                return function (data) {
 
-            $('#searchMainResultProgress').addClass('hidden');
-            $('#searchMainResult').removeClass('hidden');
+                    var links = $.parseJSON(data).links;
 
-            var links = $.parseJSON(data).links;
+                    resultDiv.find('.searchMainResultProgress').addClass('hidden');
+                    resultDiv.find('.searchMainResult').removeClass('hidden');
 
-            var tb = $('#resultTableBody');
-            tb.find('tr').remove();
+                    var tb = resultDiv.find('.resultTableBody');
+                    tb.find('tr').remove();
 
-            for (var i in links) {
+                    for (var i in links) {
 
-                var tr = $('<tr></tr>');
-                var td = $('<td></td>');
+                        var tr = $('<tr></tr>');
+                        var td = $('<td></td>');
 
-                var a = '<small><a href="' + links[i][1] + '">' + links[i][1] + '</a></small>';
-                td.append($(a));
-                a = $('<small><a class="pull-right">Edit</a></small>');
+                        var a = '<small><a href="' + links[i][1] + '">' + links[i][1] + '</a></small>';
+                        td.append($(a));
+                        a = $('<small><a class="pull-right">Edit</a></small>');
 
-                a.click(FACTORIES.SearchResultLinkEdit.create(links[i][0], null));
+                        a.click(FACTORIES.SearchResultLinkEdit.create(links[i][0], null));
 
-                td.append(a);
-                tr.append(td);
+                        td.append(a);
+                        tr.append(td);
 
-                tr.append('<td>' + links[i][2] + '</td>');
-                tb.append(tr);
+                        tr.append('<td><small>' + links[i][2] + '</small></td>');
+                        tb.append(tr);
 
-            }
-
-        }).error(DEFAULT_ERROR_HANDLER);
+                    }
+                }
+            }(res)).error(DEFAULT_ERROR_HANDLER);
 
     return false;
 });

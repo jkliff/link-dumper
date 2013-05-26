@@ -1,20 +1,33 @@
+<form id="formMainSearch">
+    <label>Search</label>
+    <input class="input-xxlarge" name="q" type="text" placeholder="Search">
+</form>
 
-     <form id="formMainSearch">
-         <label>Search</label>
-         <input class="input-xxlarge" name="q" type="text" placeholder="Search">
-     </form>
+<!-- hidden template for search results -->
+<div class="pull-left hidden" id="tplSearchResult">
 
-     <div id="searchMainResultProgress" class="progress progress-striped active hidden">
-         <div class="bar" style="width: 100%;"></div>
-     </div>
+    <div class="searchMainResultProgress progress progress-striped active hidden">
+        <div class="bar" style="width: 100%;"></div>
+    </div>
 
-     <table id="searchMainResult" class="table table-hover table-condensed hidden">
-         <thead>
-             <th>Url</th>
-             <th>Tags</th>
-         </thead>
-         <tbody id="resultTableBody">
-             <!-- filled by javascript -->
-         </tbody>
-     </table>
+    <table class="searchMainResult table table-hover table-condensed">
+        <thead>
+        <th>Url</th>
+        <th>Tags</th>
+        </thead>
+        <tbody class="resultTableBody">
+        <!-- filled by javascript -->
+        </tbody>
+    </table>
+</div>
 
+<!-- placeholder for copied tplSearchResult -->
+<div id="searchResultsPlaceholder"></div>
+
+<!-- list of active searches -->
+<div class="span2 pull-right">
+    <ul id="searchesList" class="nav nav-list">
+        <li class="nav-header">Searches</li>
+    </ul>
+
+</div>

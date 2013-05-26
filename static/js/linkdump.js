@@ -269,14 +269,14 @@ $('#formMainSearch').submit(function () {
             var tb = $('#resultTableBody');
             tb.find('tr').remove();
 
-            for (i in links) {
+            for (var i in links) {
 
                 var tr = $('<tr></tr>');
                 var td = $('<td></td>');
 
-                var a = '<a href="' + links[i][1] + '">' + links[i][1] + '</a>';
+                var a = '<small><a href="' + links[i][1] + '">' + links[i][1] + '</a></small>';
                 td.append($(a));
-                a = $('<a class="pull-right">Edit</a>');
+                a = $('<small><a class="pull-right">Edit</a></small>');
 
                 a.click(FACTORIES.SearchResultLinkEdit.create(links[i][0], null));
 

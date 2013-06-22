@@ -85,7 +85,7 @@ var APP = {
 
             $.ajax({
                 type: 'POST',
-                url: 'edit_link',
+                url: 'link/edit_link',
                 data: {l_id: id}
             }).complete(function (data) {
                     var d = $.parseJSON(data.responseText).link;
@@ -123,8 +123,8 @@ DEFAULT_ERROR_HANDLER = function () {
 $('#formLinkEditSubmit').click(function () {
 
     $('#formLinkEditSubmitProgress').removeClass('hidden');
-    $('#formLinkEditSubmit').addClass('hidden');
-
+    var f = $('#formLinkEditSubmit');
+    f.addClass('hidden');
 
     console.log('loading for edit');
     var formLinkEdit = $('#formLinkEdit');
@@ -132,10 +132,13 @@ $('#formLinkEditSubmit').click(function () {
     $('#control-group-url').removeClass('warning');
     $('#control-group-url .help-inline').addClass('hidden');
 
+    var formData = $(formLinkEdit);
+    formData.url = encodeURI(formData.url);
+
     $.ajax({
         type: 'POST',
-        url: 'save_link',
-        data: formLinkEdit.serialize()
+        url: 'link/save_link',
+        data: formData.serialize()
     }).complete(function (form) {
             return function (d) {
 
@@ -157,7 +160,6 @@ $('#formLinkEditSubmit').click(function () {
                 } else {
                     form.append('<input type="hidden" name="link_id" value="' + r.link_id + '">');
                 }
-
             }
         }(formLinkEdit)).error(DEFAULT_ERROR_HANDLER);
 });

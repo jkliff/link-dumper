@@ -59,39 +59,6 @@ class RootController:
     def index(self, q=None):
         return {}
 
-    @expose
-    #@render (template='edit_link.jtml')
-    @output_json
-    def edit_link(self, l_id=None):
-        link = self.repository.load_link(l_id)
-        return {'link': link}
-
-    @expose
-    @output_json
-    def save_link(self, url, notes, link_id=None):
-        # FIXME: handle encoding properly (through cherrypy itself)
-        print url, notes.encode('utf-8'), link_id
-        notes = notes.encode('utf-8')
-
-        tags = []
-        actions = []
-        attributes = []
-        for s in [x.strip() for x in ' '.join(notes.split('\n')).split(' ')]:
-            if s.startswith('#'):
-                tags.append(s[1:])
-            elif s.startswith('!'):
-                actions.append(s[1:])
-
-        if len(tags) == 0:
-            tags = None
-        if len(actions) == 0:
-            actions = None
-
-        print 'link id:', link_id
-
-        resp = self.repository.save_link(url, notes, link_id=link_id, tags=tags, actions=actions, attributes=attributes)
-        print resp
-        return resp
 
     @expose
     @output_json
@@ -161,6 +128,45 @@ class RootController:
         return {'urls': list(urls), 'non_urls': list(non_urls), 'existing': list(existing)}
 
 
+class LinkController:
+    def __init__(self, repo, settings):
+        self.repository = repo
+
+    @expose
+    #@render (template='edit_link.jtml')
+    @output_json
+    def edit_link(self, l_id=None):
+        link = self.repository.load_link(l_id)
+        return {'link': link}
+
+    @expose
+    @output_json
+    def save_link(self, url, notes, link_id=None):
+        # FIXME: handle encoding properly (through cherrypy itself)
+        print url, notes.encode('utf-8'), link_id
+        notes = notes.encode('utf-8')
+
+        tags = []
+        actions = []
+        attributes = []
+        for s in [x.strip() for x in ' '.join(notes.split('\n')).split(' ')]:
+            if s.startswith('#'):
+                tags.append(s[1:])
+            elif s.startswith('!'):
+                actions.append(s[1:])
+
+        if len(tags) == 0:
+            tags = None
+        if len(actions) == 0:
+            actions = None
+
+        print 'link id:', link_id
+
+        resp = self.repository.save_link(url, notes, link_id=link_id, tags=tags, actions=actions, attributes=attributes)
+        print resp
+        return resp
+
+
 class Settings:
     def __init__(self):
         self.db_connection = None
@@ -213,6 +219,7 @@ def main():
     repository = Repository(settings.db_connection)
 
     cherrypy.tree.mount(RootController(repository, settings), '/', config=CHERRYPY_CONF)
+    cherrypy.tree.mount(LinkController(repository, settings), '/link', config=CHERRYPY_CONF)
 
     cherrypy.engine.start()
     cherrypy.engine.block()

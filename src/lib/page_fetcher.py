@@ -8,11 +8,13 @@ from urllib2 import HTTPError
 
 def save_file (page_title, data):
     """
-    >>> re.sub ('[^-a-zA-Z0-9.()\ ]+', '', 'http://iua.de/hrf-/,3420%=af?re&a\df_&aer=iuah/rsi:f')
+    >>> re.sub ('[^-a-zA-Z0-9_. ]+', '',\
+        re.sub ('[/(): ]+', '_',\
+        re.sub ('\.html?$', '', 'http://iua.de/hrf-/,3420%=af?re&a\df_&aer=iuah/rsi:f')))
 
 """
-    file_name = re.sub ('[^-a-zA-Z0-9_. ]+', '', 
-        re.sub ('[/(): ]+', '_', 
+    file_name = re.sub ('[^-a-zA-Z0-9_. ]+', '',
+        re.sub ('[/(): ]+', '_',
         re.sub ('\.html?$', '', page_title)
     ))
     with (open (file_name, 'w')) as f:

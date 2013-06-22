@@ -125,7 +125,6 @@ $('#formLinkEditSubmit').click(function () {
     $('#formLinkEditSubmitProgress').removeClass('hidden');
     $('#formLinkEditSubmit').addClass('hidden');
 
-    var isEdit = $('#formLinkEditSubmit').find('input[name=link_id]') != null;
 
     console.log('loading for edit');
     var formLinkEdit = $('#formLinkEdit');
@@ -137,25 +136,30 @@ $('#formLinkEditSubmit').click(function () {
         type: 'POST',
         url: 'save_link',
         data: formLinkEdit.serialize()
-    }).complete(function (d) {
+    }).complete(function (form) {
+            return function (d) {
 
-            console.log('received result');
+                console.log('received result');
 
-            $('#formLinkEditSubmitProgress').addClass('hidden');
-            $('#formLinkEditSubmit').removeClass('hidden');
+                $('#formLinkEditSubmitProgress').addClass('hidden');
+                $('#formLinkEditSubmit').removeClass('hidden');
 
-            var r = $.parseJSON(d.responseText);
-            console.log('r', r);
-            if (r.exists) {
-                $('#control-group-url').addClass('warning');
-                $('#control-group-url .help-inline').removeClass('hidden');
-            } else if (isEdit) {
-                $('#formConfirmBulkImport .btn').removeAttr("disabled");
-            } else {
-                formLinkEdit.append('<input type="hidden" name="link_id" value="' + r.link_id + '">');
+                var r = $.parseJSON(d.responseText);
+                console.log('r', r);
+
+                var isEdit = $('#formLinkEdit').find('input[name=link_id]').length > 0;
+
+                if (!isEdit && r.exists) {
+                    $('#control-group-url').addClass('warning');
+                    $('#control-group-url .help-inline').removeClass('hidden');
+                } else if (isEdit) {
+                    $('#formConfirmBulkImport .btn').removeAttr("disabled");
+                } else {
+                    form.append('<input type="hidden" name="link_id" value="' + r.link_id + '">');
+                }
+
             }
-
-        }).error(DEFAULT_ERROR_HANDLER);
+        }(formLinkEdit)).error(DEFAULT_ERROR_HANDLER);
 });
 
 $('#bulkImportSubmit').click(function () {
@@ -266,27 +270,27 @@ $('#formMainSearch').submit(function () {
     res.find('.searchMainResultProgress').removeClass('hidden');
     res.find('.searchMainResult').addClass('hidden');
 
-    res.find ('.searchTermsPlaceholder').text('Search: ' + fv);
-    
-    
+    res.find('.searchTermsPlaceholder').text('Search: ' + fv);
+
+
     placeholder.append(res);
 
     var el = $('<li><a>' + fv + '</a></li>');
-    
-    res.find ('.btnCloseSearch').click (function (tabRef) {
+
+    res.find('.btnCloseSearch').click(function (tabRef) {
         return function () {
-            console.log ('click?');
-            $(this).parent().parent().remove ();
+            console.log('click?');
+            $(this).parent().parent().remove();
             tabRef.remove();
         }
-    } (el));
+    }(el));
 
     var hideOtherResults = function (resultDiv, li) {
         return function () {
-            $('#searchResultsPlaceholder').find('div').addClass('hidden').removeClass ('span9 pull-left');
+            $('#searchResultsPlaceholder').find('div').addClass('hidden').removeClass('span9 pull-left');
             $('#searchesList').find('li').removeClass('active');
-            resultDiv.removeClass('hidden').addClass ('span9 pull-left');
-            
+            resultDiv.removeClass('hidden').addClass('span9 pull-left');
+
             el.addClass('active');
         }
     }(res, el);

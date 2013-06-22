@@ -13,7 +13,7 @@
     <table class="searchMainResult table table-hover table-condensed">
         <thead>
         <th>Url</th>
-        <th>Tags</th>
+        <th class="span2">Tags</th>
         </thead>
         <tbody class="resultTableBody">
         <!-- filled by javascript -->

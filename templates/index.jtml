@@ -1,5 +1,5 @@
 <form id="formMainSearch">
-    <label>Search</label>
+    <h4>Search</h4>
     <input class="input-xxlarge" name="q" type="text" placeholder="Search">
 </form>
 
@@ -9,6 +9,8 @@
     <div class="searchMainResultProgress progress progress-striped active hidden">
         <div class="bar" style="width: 100%;"></div>
     </div>
+    
+    <h5><span class="searchTermsPlaceholder">Foo</span><i class="btnCloseSearch pull-right icon-remove"></i></h5>
 
     <table class="searchMainResult table table-hover table-condensed">
         <thead>

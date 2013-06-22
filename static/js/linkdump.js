@@ -266,9 +266,20 @@ $('#formMainSearch').submit(function () {
     res.find('.searchMainResultProgress').removeClass('hidden');
     res.find('.searchMainResult').addClass('hidden');
 
+    res.find ('.searchTermsPlaceholder').text('Search: ' + fv);
+    
+    
     placeholder.append(res);
 
     var el = $('<li><a>' + fv + '</a></li>');
+    
+    res.find ('.btnCloseSearch').click (function (tabRef) {
+        return function () {
+            console.log ('click?');
+            $(this).parent().parent().remove ();
+            tabRef.remove();
+        }
+    } (el));
 
     var hideOtherResults = function (resultDiv, li) {
         return function () {

@@ -1,5 +1,5 @@
 
-    <h3>Bulk link import</h3>
+    <h4>Bulk link import</h4>
 
     <form id="formBulkImport">
         <input type="hidden" name="mode" value="" />

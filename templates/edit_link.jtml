@@ -6,7 +6,7 @@
 
         <div id="control-group-url" class="control-group">
             <label class="control-label">URL</label>
-            <input name="url" type="text" class="input-xxlarge" placeholder="url">
+            <input name="url" type="text" class="input-xxlarge noEnterSubmit" placeholder="url">
             <span class="help-inline hidden">Duplicate URL</span>
         </div>
         <div class="control-group">

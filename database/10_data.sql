@@ -30,4 +30,9 @@ create table linkdump_data.link_action (
     la_action_id integer references linkdump_data.action (a_id)
 );
 
+create table linkdump_data.link_data (
+    ld_id integer primary key references linkdump_data.link (l_id),
+    ld_title text,
+    ld_body text
+);
 

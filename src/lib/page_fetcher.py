@@ -5,10 +5,6 @@ import urllib2
 from urllib2 import URLError
 from urllib2 import HTTPError
 
-import unicodedata
-
-
-
 
 def save_file (page_title, data):
     """
@@ -24,7 +20,6 @@ def save_file (page_title, data):
 
 def parse_title (data):
     return None
-
 
 def fetch (url):
     """

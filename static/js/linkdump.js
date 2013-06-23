@@ -162,8 +162,9 @@ $('#formLinkEditSubmit').click(function () {
 
                 }
 
-            }(formLinkEdit)
-        }).error(DEFAULT_ERROR_HANDLER);
+            }
+        }(formLinkEdit)
+        ).error(DEFAULT_ERROR_HANDLER);
 
 });
 

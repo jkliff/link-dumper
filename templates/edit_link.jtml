@@ -1,55 +1,58 @@
 <h4>Edit link</h4>
-<form id="formLinkEdit" action="link/save_link">
-    <fieldset>
 
-        <div>
+<div>
+    <form id="formLinkEdit" action="link/save_link" class="pull-left">
+        <fieldset>
+            <div>
 
-            <div id="control-group-url" class="control-group">
-                <label class="control-label">URL</label>
-                <input name="url" type="text" class="input-xxlarge" placeholder="url">
-                <span class="help-inline hidden">Duplicate URL</span>
+                <div id="control-group-url" class="control-group">
+                    <label class="control-label">URL</label>
+                    <input name="url" type="text" class="input-xxlarge noEnterSubmit" placeholder="url">
+                    <span class="help-inline hidden">Duplicate URL</span>
+                </div>
+                <div class="control-group">
+                    <label>Notes</label>
+                    <textarea name="notes" rows="10" class="input-xxlarge" placeholder="notes"></textarea>
+                </div>
+
             </div>
-            <div class="control-group">
-                <label>Notes</label>
-                <textarea name="notes" rows="10" class="input-xxlarge" placeholder="notes"></textarea>
-            </div>
 
+        </fieldset>
+
+        <div id="formLinkEditSubmitProgress" class="progress progress-striped active hidden">
+            <div class="bar" style="width: 100%;"></div>
         </div>
 
-    </fieldset>
+        <button id="formLinkEditSubmit" type="button" class="btn btn-primary">Save</button>
+    </form>
 
-    <div id="formLinkEditSubmitProgress" class="progress progress-striped active hidden">
-        <div class="bar" style="width: 100%;"></div>
+
+    <div class="span4 hidden" id="linkMetaInfo">
+        <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+                <li class="nav-header">Link info</li>
+                {% if link %}
+
+                <li><a href="" target="_blank">Visit</a></li>
+                <li>Created {{ link [5] }}</li>
+                <li>Last modified {{ link [6]}}</li>
+                {% endif %}
+                <li class="nav-header">Tags</li>
+                {% if link %}
+                {% for t in link [3] %}
+                <li>{{ t }}</li>
+                {% endfor %}
+                {% endif %}
+                <li class="nav-header">Actions</li>
+                {% if link %}
+                {% for a in link [4] %}
+                <li>{{ a }}</li>
+                {% endfor %}
+                {% endif %}
+
+            </ul>
+        </div>
+        <!--/.well -->
+
     </div>
-
-    <button id="formLinkEditSubmit" type="button" class="btn btn-primary">Save</button>
-</form>
-</div>
-<div class="span4 hidden" id="linkMetaInfo">
-    <div class="well sidebar-nav">
-        <ul class="nav nav-list">
-            <li class="nav-header">Link info</li>
-            {% if link %}
-
-            <li><a href="" target="_blank">Visit</a></li>
-            <li>Created {{ link [5] }}</li>
-            <li>Last modified {{ link [6]}}</li>
-            {% endif %}
-            <li class="nav-header">Tags</li>
-            {% if link %}
-            {% for t in link [3] %}
-            <li>{{ t }}</li>
-            {% endfor %}
-            {% endif %}
-            <li class="nav-header">Actions</li>
-            {% if link %}
-            {% for a in link [4] %}
-            <li>{{ a }}</li>
-            {% endfor %}
-            {% endif %}
-
-        </ul>
-    </div>
-    <!--/.well -->
-
 </div>

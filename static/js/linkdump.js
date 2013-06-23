@@ -43,9 +43,9 @@ var FACTORIES = {
             return function (t, tabs, addition) {
 
                 return function () {
-                    for (i in tabs) {
+                    for (var i in tabs) {
                         var el = $('#canvas' + tabs[i].capitalize());
-                        var src = $('#mainLink' + tabs[i].capitalize()).parent()
+                        var src = $('#mainLink' + tabs[i].capitalize()).parent();
                         if (t == tabs [i]) {
                             el.removeClass('hidden');
                             src.addClass('active');
@@ -65,46 +65,46 @@ var FACTORIES = {
 };
 
 var APP = {
-        loadLinkToEdit: function (id) {
+    loadLinkToEdit: function (id) {
 
-            var form = $('#formLinkEdit');
-            console.log('link to edit', id);
+        var form = $('#formLinkEdit');
+        console.log('link to edit', id);
 
-            form.find('input[name=url]').val('');
-            form.find('textarea[name=notes]').val('');
-            $('#control-group-url').removeClass('warning');
-            $('#control-group-url .help-inline').addClass('hidden');
-            form.find('input[name=link_id]').remove();
+        form.find('input[name=url]').val('');
+        form.find('textarea[name=notes]').val('');
+        $('#control-group-url').removeClass('warning');
+        $('#control-group-url .help-inline').addClass('hidden');
+        form.find('input[name=link_id]').remove();
 
-            if (id == null) {
-                console.log('nothing to be done, bye');
-                return;
-            }
-
-            form.append('<input type="hidden" name="link_id" value="' + id + '">');
-
-            $.ajax({
-                type: 'POST',
-                url: 'link/edit_link',
-                data: {l_id: id}
-            }).complete(function (data) {
-                    var d = $.parseJSON(data.responseText).link;
-                    console.log(d);
-
-                    if (!form.find('input[name=link_id]')) {
-                        console.log('adding link_id');
-
-                        form.append('<input type="hidden" name="link_id" value="' + d[0] + '">');
-                    }
-                    form.find('input[name=url]').val(d[1]);
-                    form.find('textarea[name=notes]').val(d[2]);
-
-                }
-            )
-            ;
+        if (id == null) {
+            console.log('nothing to be done, bye');
+            return;
         }
+
+        form.append('<input type="hidden" name="link_id" value="' + id + '">');
+
+        $.ajax({
+            type: 'POST',
+            url: 'link/edit_link',
+            data: {l_id: id}
+        }).complete(function (data) {
+                var d = $.parseJSON(data.responseText).link;
+                console.log(d);
+
+                if (!form.find('input[name=link_id]')) {
+                    console.log('adding link_id');
+
+                    form.append('<input type="hidden" name="link_id" value="' + d[0] + '">');
+                    $('#linkMetaInfo').removeClass('hidden');
+                }
+
+                form.find('input[name=url]').val(d[1]);
+                form.find('textarea[name=notes]').val(d[2]);
+            }
+        );
     }
-    ;
+};
+
 
 $('#mainLinkHome').click(FACTORIES.MainLinkToggle.create('home', null));
 
@@ -151,7 +151,6 @@ $('#formLinkEditSubmit').click(function () {
                 console.log('r', r);
 
                 var isEdit = $('#formLinkEdit').find('input[name=link_id]').length > 0;
-
                 if (!isEdit && r.exists) {
                     $('#control-group-url').addClass('warning');
                     $('#control-group-url .help-inline').removeClass('hidden');
@@ -159,9 +158,13 @@ $('#formLinkEditSubmit').click(function () {
                     $('#formConfirmBulkImport .btn').removeAttr("disabled");
                 } else {
                     form.append('<input type="hidden" name="link_id" value="' + r.link_id + '">');
+                    $('#linkMetaInfo').removeClass('hidden');
+
                 }
-            }
-        }(formLinkEdit)).error(DEFAULT_ERROR_HANDLER);
+
+            }(formLinkEdit)
+        }).error(DEFAULT_ERROR_HANDLER);
+
 });
 
 $('#bulkImportSubmit').click(function () {

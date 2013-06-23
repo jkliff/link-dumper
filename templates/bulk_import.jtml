@@ -15,7 +15,7 @@
         </div>
     </form>
 
-    <form id="formConfirmBulkImport" action="perform_bulk_import" method="POST">
+    <form id="formConfirmBulkImport">
         <input type="hidden" name="mode" value="perform" />
         <input id="formConfirmResolvedUrls" type="hidden" name="q" value="" />
 

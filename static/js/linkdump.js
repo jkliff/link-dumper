@@ -237,7 +237,8 @@ $('#bulkImportSubmit').click(function () {
                 $('#formConfirmBulkImportConfirm').removeAttr("disabled").addClass("btn-primary");
             }
 
-        }).error(DEFAULT_ERROR_HANDLER);
+        }
+    ).error(DEFAULT_ERROR_HANDLER);
 
 });
 
@@ -251,13 +252,26 @@ $('#formConfirmBulkImportConfirm').click(function () {
         }
     });
 
+    var q = $('#formConfirmResolvedUrls');
+    q.val(urls.join(' '));
+
     if (urls.length > 0) {
 
-        var q = $('#formConfirmResolvedUrls');
-        q.val(urls.join(' '));
-        $('#formConfirmBulkImport').submit();
+        $.ajax({
+            type: 'POST',
+            url: 'perform_bulk_import',
+            data: {
+                q: q.val(),
+                mode: 'perform'
+            }
+        }).complete(function (data) {
+                console.log(data);
+                console.log($.parseJSON(data.responseText));
+            }
+        ).error(DEFAULT_ERROR_HANDLER);
     }
-});
+})
+;
 
 $('#formMainSearch').submit(function () {
     var f = $('#formMainSearch');

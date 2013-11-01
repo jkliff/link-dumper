@@ -20,10 +20,6 @@ def save_file(page_title, data):
         f.write(data)
 
 
-def parse_title(data):
-    return None
-
-
 def fetch(url):
     """
     >>> fetch ('http://localhost:8000/test_page.html')
@@ -36,10 +32,9 @@ def fetch(url):
     try:
         resp = urllib2.urlopen(url)
         data = resp.read()
-        title = parse_title(data)
-        if title is None:
-            title = 'UNK ' + url
-        save_file(title, data)
+
+        return data
+
     except URLError as e:
         print e
     except HTTPError as e:

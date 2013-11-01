@@ -33,6 +33,7 @@ create table linkdump_data.link_action (
 create table linkdump_data.link_data (
     ld_id integer primary key references linkdump_data.link (l_id),
     ld_title text,
-    ld_body text
+    ld_body text,
+    ld_raw text
 );
 

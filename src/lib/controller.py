@@ -5,6 +5,7 @@ import re
 
 import cherrypy
 import jinja2
+import page_fetcher
 
 
 BASE_URL = ''
@@ -111,11 +112,6 @@ class RootController:
         r = {'links': self.repository.search(terms, tags, actions) or []}
         return r
 
-    #@expose
-    #@render (template='bulk_import.jtml')
-    #def bulk_import (self):
-    #    return {}
-
     @expose
     @output_json
     def perform_bulk_import(self, mode=None, q=None):
@@ -189,3 +185,16 @@ class LinkController:
         resp = self.repository.save_link(url, notes, link_id=link_id, tags=tags, actions=actions, attributes=attributes)
         print resp
         return resp
+
+    @expose
+    @output_json
+    def fetch_and_save_link_data(self, link_id):
+        link = self.repository.load_link(link_id)
+        url = link[1]
+        data = page_fetcher.fetch(url)
+        
+        self.repository.save_link_content(link_id, raw=data)
+
+        return {
+            'size': len(data)
+        }

@@ -1,132 +1,197 @@
 DO $$
 BEGIN
-    perform 1
-    from information_schema.schemata
-    where schema_name = 'linkdump_api';
+    PERFORM 1
+    FROM information_schema.schemata
+    WHERE schema_name = 'linkdump_api';
 
-    if not found then
-        create schema linkdump_api;
-    end if;
+  IF NOT found
+  THEN
+    CREATE SCHEMA linkdump_api;
+  END IF;
 END $$;
 
-set search_path to linkdump_api;
+SET search_path TO linkdump_api;
 
-create or replace function save_link (
-    p_link_id       integer,
-    p_url           text,
-    p_notes         text,
-    p_tags          text [],
-    p_actions       text [],
-    p_attributes    text []
-) returns integer AS
-$BODY$
+CREATE OR REPLACE FUNCTION save_link(
+  p_link_id    INTEGER,
+  p_url        TEXT,
+  p_notes      TEXT,
+  p_tags       TEXT [],
+  p_actions    TEXT [],
+  p_attributes TEXT []
+)
+  RETURNS INTEGER AS
+  $BODY$
 
-DECLARE
-    l_link_id   integer;
-    l_n         text;
-BEGIN
-    perform 1
-    from linkdump_data.link
-    where l_id = p_link_id;
+  DECLARE
+    l_link_id INTEGER;
+    l_n       TEXT;
+  BEGIN
+      PERFORM 1
+      FROM linkdump_data.link
+      WHERE l_id = p_link_id;
 
-    if not found then
+    IF NOT found
+    THEN
 
-        insert into linkdump_data.link (l_url, l_notes)
-        values (p_url, p_notes)
-        returning l_id
-        into l_link_id;
+      INSERT INTO linkdump_data.link (l_url, l_notes)
+        VALUES (p_url, p_notes)
+      RETURNING l_id
+        INTO l_link_id;
 
-    else
-        update linkdump_data.link
-        set l_url = p_url,
-            l_notes = p_notes,
-            l_last_modified = now ()
-        where l_id = p_link_id;
+    ELSE
+      UPDATE linkdump_data.link
+      SET l_url = p_url,
+        l_notes = p_notes,
+        l_last_modified = now()
+      WHERE l_id = p_link_id;
 
-        l_link_id := p_link_id;
+      l_link_id := p_link_id;
 
-    end if;
+    END IF;
 
-    raise info 'setting tags';
+    RAISE INFO 'setting tags';
 
-    insert into linkdump_data.tag (t_name)
-    select name
-    from linkdump_data.tag
-        right join (
-            select name
-            from unnest (p_tags) t (name)
-        ) t on t.name = t_name
-    where t_name is null;
+    INSERT INTO linkdump_data.tag (t_name)
+      SELECT
+        name
+      FROM linkdump_data.tag
+        RIGHT JOIN (
+                     SELECT
+                       name
+                     FROM unnest(p_tags) t (name)
+                   ) t
+          ON t.name = t_name
+      WHERE t_name IS null;
 
-    delete from linkdump_data.link_tag where lt_link_id = l_link_id;
+    DELETE FROM linkdump_data.link_tag
+    WHERE lt_link_id = l_link_id;
 
-    insert into linkdump_data.link_tag (lt_link_id, lt_tag_id)
-    select l_link_id, t_id
-    from (  select t_id
-            from (
-                select name
-                from unnest (p_tags) t(name)
-            ) t
-                join linkdump_data.tag on t.name = t_name
-                left join linkdump_data.link_tag on lt_tag_id = t_id
-                    and lt_link_id = l_link_id
-            where lt_tag_id is null
-    ) t;
+    INSERT INTO linkdump_data.link_tag (lt_link_id, lt_tag_id)
+      SELECT
+        l_link_id,
+        t_id
+      FROM (SELECT
+              t_id
+            FROM (
+                   SELECT
+                     name
+                   FROM unnest(p_tags) t(name)
+                 ) t
+              JOIN linkdump_data.tag ON t.name = t_name
+              LEFT JOIN linkdump_data.link_tag ON lt_tag_id = t_id
+                                                  AND lt_link_id = l_link_id
+            WHERE lt_tag_id IS null
+           ) t;
 
-    raise info 'setting actions';
+    RAISE INFO 'setting actions';
 
-    insert into linkdump_data.action (a_name)
-    select name
-    from linkdump_data.action
-        right join (
-            select name
-            from unnest (p_actions) t (name)
-        ) t on t.name = a_name
-    where a_name is null;
+    INSERT INTO linkdump_data.action (a_name)
+      SELECT
+        name
+      FROM linkdump_data.action
+        RIGHT JOIN (
+                     SELECT
+                       name
+                     FROM unnest(p_actions) t (name)
+                   ) t
+          ON t.name = a_name
+      WHERE a_name IS null;
 
-    delete from linkdump_data.link_action where la_link_id = l_link_id;
+    DELETE FROM linkdump_data.link_action
+    WHERE la_link_id = l_link_id;
 
-    insert into linkdump_data.link_action (la_link_id, la_action_id)
-    select l_link_id, a_id
-    from (  select a_id
-            from (
-                select name
-                from unnest (p_actions) t(name)
-            ) t
-                join linkdump_data.action on t.name = a_name
-                left join linkdump_data.link_action on la_action_id = a_id
-                    and la_link_id = l_link_id
-            where la_action_id is null
-    ) t;
+    INSERT INTO linkdump_data.link_action (la_link_id, la_action_id)
+      SELECT
+        l_link_id,
+        a_id
+      FROM (SELECT
+              a_id
+            FROM (
+                   SELECT
+                     name
+                   FROM unnest(p_actions) t(name)
+                 ) t
+              JOIN linkdump_data.action ON t.name = a_name
+              LEFT JOIN linkdump_data.link_action ON la_action_id = a_id
+                                                     AND la_link_id = l_link_id
+            WHERE la_action_id IS null
+           ) t;
 
-    return l_link_id;
+    RETURN l_link_id;
 
-END
+  END
 
-$BODY$
-language plpgsql
-    volatile
-    security definer;
-
-
-create or replace function get_link (
-    integer,    -- id
-    text,        -- url
-    out integer,
-    out text
-) returns record as
-$BODY$
-
-    select l_id, l_url
-    from linkdump_data.link
-    where l_id = $1
-        or l_url = $2;
-
-$BODY$
-language sql
-    volatile
-    security definer;
-
+  $BODY$
+LANGUAGE plpgsql
+VOLATILE
+SECURITY DEFINER;
 
 
-reset search_path;
+CREATE OR REPLACE FUNCTION get_link(
+  INTEGER, -- id
+      TEXT, -- url
+  OUT INTEGER,
+  OUT TEXT
+)
+  RETURNS RECORD AS
+  $BODY$
+
+  SELECT
+    l_id,
+    l_url,
+    ld_id IS NOT null AS has_data
+  FROM linkdump_data.link
+    LEFT JOIN linkdump_data.link_data ON ld_id = l_id
+  WHERE l_id = $1
+        OR l_url = $2;
+
+  $BODY$
+LANGUAGE SQL
+VOLATILE
+SECURITY DEFINER;
+
+
+CREATE OR REPLACE FUNCTION save_link_data(
+  p_link_id INTEGER,
+  p_body    TEXT,
+  p_raw     TEXT
+)
+  RETURNS RECORD AS
+  $BODY$
+
+  BEGIN
+      PERFORM 1
+      FROM linkdump_data.link_data
+      WHERE ld_id = p_link_id;
+    IF NOT found
+    THEN
+      INSERT INTO linkdump_data.link_data (ld_id, ld_body, ld_data)
+        VALUES (p_link_id, p_body, p_raw);
+    ELSE
+
+      IF p_body IS NOT null
+      THEN
+        UPDATE linkdump_data.link_data
+        SET ld_body = p_body
+        WHERE ld_id = p_link_id;
+      END IF;
+
+      IF p_raw IS NOT null
+      THEN
+        UPDATE linkdump_data.link_data
+        SET ld_raw = p_raw
+        WHERE ld_id = p_link_id;
+      END IF;
+
+
+    END IF;
+  END;
+
+  $BODY$
+LANGUAGE plpgsql
+VOLATILE
+SECURITY DEFINER;
+
+
+RESET search_path;

@@ -6,7 +6,7 @@ if '2.5' > psycopg2.__version__:
 
 SQL = {
     'save_link': 'select * from linkdump_api.save_link (%s::integer, %s, %s, %s::text[], %s::text[], %s::text[])',
-
+    'save_link_data': '''select * from linkdump_api.save_link_data (%s::integer, nullif (%s, ''), nullif (%s, ''))''',
     'get_link': 'select * from linkdump_api.get_link (%s::integer, %s::text) t(integer, text)',
 
     'search': """
@@ -94,6 +94,11 @@ class Repository(object):
                     resp['link_id'] = c.fetchone()[0]
 
         return resp
+
+    def save_link_content(self, link_id, body=None, raw=None):
+        with (self.getconn()) as conn:
+            with (conn.cursor()) as c:
+                c.execute(SQL['save_link_data'], (link_id, body, raw))
 
     def list_tags(self):
         with (self.getconn()) as conn:

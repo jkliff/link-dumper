@@ -77,9 +77,12 @@ var APP = {
         form.find('input[name=link_id]').remove();
 
         if (id == null) {
+            $('#linkEditSaveData').addClass('hidden');
             console.log('nothing to be done, bye');
             return;
         }
+
+        $('#linkEditSaveData').removeClass('hidden');
 
         form.append('<input type="hidden" name="link_id" value="' + id + '">');
 
@@ -89,14 +92,16 @@ var APP = {
             data: {l_id: id}
         }).complete(function (data) {
                 var d = $.parseJSON(data.responseText).link;
-                console.log(d);
+                console.log('complete load link', d);
 
                 if (!form.find('input[name=link_id]')) {
                     console.log('adding link_id');
 
                     form.append('<input type="hidden" name="link_id" value="' + d[0] + '">');
                     $('#linkMetaInfo').removeClass('hidden');
+
                 }
+
 
                 form.find('input[name=url]').val(d[1]);
                 form.find('textarea[name=notes]').val(d[2]);
@@ -166,6 +171,20 @@ $('#formLinkEditSubmit').click(function () {
         }(formLinkEdit)
         ).error(DEFAULT_ERROR_HANDLER);
 
+});
+
+$('#linkEditSaveData').click(function () {
+
+    var form = $('#formLinkEdit');
+    var link_id = form.find('input[name=link_id]').val()
+    $.ajax({
+        type: 'GET',
+        url: 'link/fetch_and_save_link_data',
+        data: {link_id: link_id}
+    }).complete(function (r) {
+            console.log(r);
+        }).
+        error(DEFAULT_ERROR_HANDLER);
 });
 
 $('#bulkImportSubmit').click(function () {

@@ -6,9 +6,13 @@ jinja2
 pyyaml
 
 
-solr    
+solr
 
 
-startup: 
+startup:
 
-./start envs/dev.conf
+./start.sh envs/dev.conf
+
+
+Feature under development: 
+- saving of url data to database (missing display and clean text reading)

@@ -62,8 +62,9 @@ class RootController:
     @output_json
     def save_link(self, url, notes, link_id=None):
         # FIXME: handle encoding properly (through cherrypy itself)
-        print url, notes.encode('utf-8'), link_id
+        print url.encode('utf-8'), notes.encode('utf-8'), link_id
         notes = notes.encode('utf-8')
+        url = url.encode('utf-8')
 
         tags = []
         actions = []

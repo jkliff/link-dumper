@@ -6,5 +6,11 @@ from pg_stat_activity
 where datname = 'linkdump_dev'
 EOF
 
-$PSQL -U postgres -f database/initdb.sql
-cat database/10_data.sql database/20_api.sql | $PSQL -U linkdump_dev linkdump_dev
+
+FILES="database/20_api.sql"
+if [[ $1 == '--data' ]] ; then
+    FILES="database/10_data.sql $FILES";
+    $PSQL -U postgres -f database/initdb.sql
+fi
+
+cat $FILES | $PSQL -U linkdump_dev linkdump_dev

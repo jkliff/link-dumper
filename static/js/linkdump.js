@@ -69,6 +69,8 @@ var APP = {
 
         var form = $('#formLinkEdit');
         console.log('link to edit', id);
+        
+        $('#linkMetaInfo').addClass('hidden');
 
         form.find('input[name=url]').val('');
         form.find('textarea[name=notes]').val('');
@@ -157,15 +159,21 @@ $('#formLinkEditSubmit').click(function () {
 
                 var isEdit = $('#formLinkEdit').find('input[name=link_id]').length > 0;
                 if (!isEdit && r.exists) {
+                    // case when we are trying to insert a link that is already in the db
+                    // FIXME: return proper status from backend
                     $('#control-group-url').addClass('warning');
                     $('#control-group-url .help-inline').removeClass('hidden');
-                } else if (isEdit) {
+                    return;
+
+                }
+
+                if (isEdit) {
                     $('#formConfirmBulkImport .btn').removeAttr("disabled");
                 } else {
                     form.append('<input type="hidden" name="link_id" value="' + r.link_id + '">');
-                    $('#linkMetaInfo').removeClass('hidden');
-
                 }
+
+                $('#linkMetaInfo').removeClass('hidden');
 
             }
         }(formLinkEdit)

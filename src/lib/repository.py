@@ -41,7 +41,15 @@ select l_id, l_url, l_notes,
     l_last_modified::text,
     exists (select 1 from linkdump_data.link_data where ld_link_id = l_id limit 1) as has_data
 from linkdump_data.link
-where l_id = %s"""
+where l_id = %s""",
+
+    'load_link_data': '''
+select case when %s = 'body' then coalesce (ld_body, ld_raw) else ld_raw end,
+    case when %s = 'body' and ld_body is not null then 'body' else 'raw' end as data_type
+from linkdump_data.link_data
+where ld_link_id = %s
+order by ld_created
+'''
 
 }
 
@@ -120,6 +128,14 @@ class Repository(object):
             with (conn.cursor()) as c:
                 c.execute(q, (l_id, ))
                 return c.fetchone()
+
+    def load_link_data(self, link_id, type):
+        q = SQL['load_link_data']
+
+        with (self.getconn()) as conn:
+            with (conn.cursor()) as c:
+                c.execute(q, (type, type, link_id))
+                return c.fetchall()
 
     def search(self, terms, tags, actions):
 

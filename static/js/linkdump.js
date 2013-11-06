@@ -121,8 +121,8 @@ function displayLinkMetaInfo(linkId, url) {
 
     var meta = $('#linkMetaInfo');
     meta.find('a.linkMetaUrl').attr('href', url);
-    meta.find('a.linkMetaRawLink').attr('href', 'link_data?type=raw&id=' + linkId);
-    meta.find('a.linkMetaFilteredLink').attr('href', 'link_data?type=filtered&id=' + linkId);
+    meta.find('a.linkMetaRawLink').attr('href', 'link/load_data?type=raw&link_id=' + linkId);
+    meta.find('a.linkMetaFilteredLink').attr('href', 'link/load_data?&link_id=' + linkId);
 }
 
 $('#mainLinkHome').click(FACTORIES.MainLinkToggle.create('home', null));

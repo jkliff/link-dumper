@@ -154,11 +154,18 @@ class LinkController:
         self.repository = repo
 
     @expose
-    #@render (template='load_link.jtml')
     @output_json
     def load_link(self, l_id=None):
         link = self.repository.load_link(l_id)
         return {'link': link}
+
+    @expose
+    @output_json
+    def load_data(self, link_id, type='body'):
+        return {
+            'link_id': link_id,
+            'link_data': self.repository.load_link_data(link_id, type)
+        }
 
     @expose
     @output_json
@@ -193,7 +200,7 @@ class LinkController:
         link = self.repository.load_link(link_id)
         url = link[1]
         data = page_fetcher.fetch(url)
-        
+
         self.repository.save_link_content(link_id, raw=data)
 
         return {

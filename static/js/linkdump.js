@@ -69,7 +69,7 @@ var APP = {
 
         var form = $('#formLinkEdit');
         console.log('link to edit', id);
-        
+
         $('#linkMetaInfo').addClass('hidden');
 
         form.find('input[name=url]').val('');
@@ -96,22 +96,34 @@ var APP = {
                 var d = $.parseJSON(data.responseText).link;
                 console.log('complete load link', d);
 
+                var linkId = d[0];
+                var url = d[1];
+
                 if (!form.find('input[name=link_id]')) {
                     console.log('adding link_id');
 
-                    form.append('<input type="hidden" name="link_id" value="' + d[0] + '">');
-                    $('#linkMetaInfo').removeClass('hidden');
-
+                    form.append('<input type="hidden" name="link_id">');
                 }
 
+                form.find('input[name=link_id]').val(linkId);
 
-                form.find('input[name=url]').val(d[1]);
+                form.find('input[name=url]').val(url);
                 form.find('textarea[name=notes]').val(d[2]);
+
+                displayLinkMetaInfo(linkId, url);
             }
         );
     }
 };
 
+function displayLinkMetaInfo(linkId, url) {
+    $('#linkMetaInfo').removeClass('hidden');
+
+    var meta = $('#linkMetaInfo');
+    meta.find('a.linkMetaUrl').attr('href', url);
+    meta.find('a.linkMetaRawLink').attr('href', 'link_data?type=raw&id=' + linkId);
+    meta.find('a.linkMetaFilteredLink').attr('href', 'link_data?type=filtered&id=' + linkId);
+}
 
 $('#mainLinkHome').click(FACTORIES.MainLinkToggle.create('home', null));
 
@@ -133,7 +145,7 @@ $('#formLinkEditSubmit').click(function () {
     var f = $('#formLinkEditSubmit');
     f.addClass('hidden');
 
-    console.log('loading for edit');
+    console.log('saving link');
     var formLinkEdit = $('#formLinkEdit');
 
     $('#control-group-url').removeClass('warning');
@@ -146,10 +158,10 @@ $('#formLinkEditSubmit').click(function () {
         type: 'POST',
         url: 'link/save_link',
         data: formData.serialize()
-    }).complete(function (form) {
+    }).complete(function (form, url) {
             return function (d) {
 
-                console.log('received result');
+                console.log('received result', url);
 
                 $('#formLinkEditSubmitProgress').addClass('hidden');
                 $('#formLinkEditSubmit').removeClass('hidden');
@@ -170,13 +182,14 @@ $('#formLinkEditSubmit').click(function () {
                 if (isEdit) {
                     $('#formConfirmBulkImport .btn').removeAttr("disabled");
                 } else {
+                    console.log('include link id');
                     form.append('<input type="hidden" name="link_id" value="' + r.link_id + '">');
                 }
 
-                $('#linkMetaInfo').removeClass('hidden');
+                displayLinkMetaInfo(r.link_id, url);
 
             }
-        }(formLinkEdit)
+        }(formLinkEdit, $('#formLinkEdit').find('input[name=url]').val())
         ).error(DEFAULT_ERROR_HANDLER);
 
 });

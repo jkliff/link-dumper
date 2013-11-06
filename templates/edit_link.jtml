@@ -35,18 +35,17 @@
                 <li class="nav-header">Link info</li>
 
 
-                <li><a href="" target="_blank">Visit</a></li>
-                <li>Created</li>
-                <li>Last modified</li>
-
+                <li><a href="" class="linkMetaUrl" target="_blank">Visit</a></li>
+                <li>Created <span id="linkMetaCreated"></li>
+                <li>Last modified <span id="linkMetaModified"></li>
                 <li class="nav-header">Tags</li>
 
-                <li>{{ t }}</li>
+                <li></span></li>
 
-                <li class="nav-header">Actions</li>
+                <li class="nav-header">Content</li>
 
-                <li>{{ a }}</li>
-
+                <li><a href="" class="linkMetaRawLink" target="_blank">Latest raw</a></li>
+                <li><a href="" class="linkMetaFilteredLink" target="_blank">Latest filtered text</a></li>
 
             </ul>
         </div>

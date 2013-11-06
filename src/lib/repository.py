@@ -38,7 +38,8 @@ select l_id, l_url, l_notes,
                 left join linkdump_data.action on la_action_id = a_id
             where la_link_id = l_id),
     l_created::text,
-    l_last_modified::text
+    l_last_modified::text,
+    exists (select 1 from linkdump_data.link_data where ld_link_id = l_id limit 1) as has_data
 from linkdump_data.link
 where l_id = %s"""
 

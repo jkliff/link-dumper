@@ -132,7 +132,8 @@ CREATE OR REPLACE FUNCTION get_link(
   INTEGER, -- id
       TEXT, -- url
   OUT INTEGER,
-  OUT TEXT
+  OUT TEXT,
+  OUT BOOLEAN
 )
   RETURNS RECORD AS
   $BODY$
@@ -157,7 +158,7 @@ CREATE OR REPLACE FUNCTION save_link_data(
   p_body    TEXT,
   p_raw     TEXT
 )
-  RETURNS RECORD AS
+  RETURNS void AS
   $BODY$
 
   BEGIN
@@ -166,7 +167,7 @@ CREATE OR REPLACE FUNCTION save_link_data(
       WHERE ld_id = p_link_id;
     IF NOT found
     THEN
-      INSERT INTO linkdump_data.link_data (ld_id, ld_body, ld_data)
+      INSERT INTO linkdump_data.link_data (ld_link_id, ld_body, ld_raw)
         VALUES (p_link_id, p_body, p_raw);
     ELSE
 

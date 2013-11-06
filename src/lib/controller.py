@@ -52,9 +52,9 @@ class RootController:
         return {}
 
     @expose
-    #@render (template='edit_link.jtml')
+    #@render (template='load_link.jtml')
     @output_json
-    def edit_link(self, l_id=None):
+    def load_link(self, l_id=None):
         link = self.repository.load_link(l_id)
         return {'link': link}
 
@@ -154,9 +154,9 @@ class LinkController:
         self.repository = repo
 
     @expose
-    #@render (template='edit_link.jtml')
+    #@render (template='load_link.jtml')
     @output_json
-    def edit_link(self, l_id=None):
+    def load_link(self, l_id=None):
         link = self.repository.load_link(l_id)
         return {'link': link}
 

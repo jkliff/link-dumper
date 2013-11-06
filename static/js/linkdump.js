@@ -90,7 +90,7 @@ var APP = {
 
         $.ajax({
             type: 'POST',
-            url: 'link/edit_link',
+            url: 'link/load_link',
             data: {l_id: id}
         }).complete(function (data) {
                 var d = $.parseJSON(data.responseText).link;
